@@ -14,13 +14,13 @@ def list_of_xyzw(q): return [q.x, q.y, q.z, q.w]
 class Node:
     def __init__(self):
 
-        c1, c2, r = np.array([0., 0.]), np.array([0., 30.]), 10
+        c1, c2, r = np.array([-120., 50.]), np.array([-100., 50.]), 10
         path = tdg.path_factory.make_oval_path(c1, c2, r)
         path.save('/tmp/foo')
         param = tdg.pure_pursuit.Param()
         param.L = 2
-        self.ctl = tdg.pure_pursuit.PurePursuit('/tmp/foo.npz', param, look_ahead=2.5)
-        self.vel = 1.
+        self.ctl = tdg.pure_pursuit.PurePursuit('/tmp/foo.npz', param, look_ahead=5.5)
+        self.vel = 3.
         
         ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
         self.pub_ackermann = rospy.Publisher(ackermann_cmd_topic, ackermann_msgs.msg.AckermannDriveStamped, queue_size=1)
