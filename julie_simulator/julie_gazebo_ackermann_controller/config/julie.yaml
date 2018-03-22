@@ -1,0 +1,5 @@
+julie_gazebo_ackermann_controller:
+      
+     model: julie
+      
+     publish_odom_tf: true

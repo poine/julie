@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_model" default="julie"/>
+  
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find julie_description)/urdf/$(arg robot_model).urdf'" />
+  
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <param name="use_gui" value="true"/>
+  <arg name="config" default="julie" />
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="TRUE"/>
+    <!--<remap from="/joint_states" to="/julie/joint_states" /> -->
+  </node>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find julie_viz)/rviz/$(arg config).rviz" />
+</launch>

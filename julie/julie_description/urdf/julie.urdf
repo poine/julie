@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Dimensions -->
+  <xacro:property name="ground_clearance" value="0.235"/>
+  <xacro:property name="wheelbase" value="1.650"/>
+  <xacro:property name="hex_hub_dist" value="0.900"/>
+  <xacro:property name="axle_length" value="0.120"/>
+  <xacro:property name="cg_to_back_axle" value="0.825" />
+
+  <xacro:property name="PI" value="3.1415926535897931"/>
+  
+  <!-- Import elements -->
+  <xacro:include filename="$(find julie_description)/urdf/base.urdf.xacro" />
+  <xacro:include filename="$(find julie_description)/urdf/suspension_wheel.urdf.xacro" />
+
+  <!-- Config -->
+  <xacro:property name="hq" value="true" />
+  
+  <!-- Robots Elements -->
+
+  <xacro:julie_base name="julie" publish_bf="false" hq="${hq}" />
+
+  <xacro:ros_control/>
+  <xacro:front_wheel lr_prefix="left" fr_prefix="front"
+                     lr_reflect="1" fr_reflect="1"/>
+  <xacro:front_wheel lr_prefix="right" fr_prefix="front"
+                     lr_reflect="-1" fr_reflect="1"/>
+  <xacro:rear_wheel lr_prefix="left" fr_prefix="rear"
+                    lr_reflect="1" fr_reflect="-1"/>
+  <xacro:rear_wheel lr_prefix="right" fr_prefix="rear"
+                    lr_reflect="-1" fr_reflect="-1"/>
+  
+</robot>

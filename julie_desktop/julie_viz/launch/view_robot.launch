@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find julie_description)/robots/julie.urdf.xacro'" />
+  <param name="robot_description" command="$(arg urdf_file)" />
+
+  <param name="use_gui" value="true"/>
+  <arg name="config" default="julie" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find julie_viz)/rviz/$(arg config).rviz" />
+</launch>

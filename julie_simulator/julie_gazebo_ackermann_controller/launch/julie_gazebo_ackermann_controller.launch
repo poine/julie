@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <rosparam command="load" file="$(find julie_gazebo_ackermann_controller)/config/julie.yaml" />
+
+  <node name="julie_gazebo_ackermann_controller" pkg="julie_gazebo_ackermann_controller" type="julie_gazebo_ackermann_controller_node" output="screen"/>
+
+</launch>
