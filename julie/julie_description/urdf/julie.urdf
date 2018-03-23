@@ -13,7 +13,11 @@
   <!-- Import elements -->
   <xacro:include filename="$(find julie_description)/urdf/base.urdf.xacro" />
   <xacro:include filename="$(find julie_description)/urdf/suspension_wheel.urdf.xacro" />
+  <!--<xacro:include filename="$(find julie_description)/urdf/sensors.urdf.xacro" /> -->
 
+  <xacro:property name="nav_ref" value="${load_yaml('$(find julie_worlds)/config/ref_enac_outdoor_1.yaml')}" />
+  <xacro:include filename="$(find julie_description)/urdf/julie.gazebo.xacro" />
+  
   <!-- Config -->
   <xacro:property name="hq" value="true" />
   
@@ -30,5 +34,8 @@
                     lr_reflect="1" fr_reflect="-1"/>
   <xacro:rear_wheel lr_prefix="right" fr_prefix="rear"
                     lr_reflect="-1" fr_reflect="-1"/>
+
+  <!-- SENSORS -->
   
+ 
 </robot>
