@@ -3,7 +3,7 @@
 
 import sys, os, time, logging, math, numpy as np, pyproj
 import PIL.Image, io
-import goompy
+
 import globalmaptiles
 import pdb
 
@@ -51,7 +51,6 @@ class LocalMapper:
         self.ecef0 = np.array(pyproj.transform(self.lla, self.ecef, *self.lla0, radians=False))
         self.R_enu_to_ecef = rm_enu_to_ecef(rad_of_deg(self.lla0[0]), rad_of_deg(self.lla0[1]))
 
-        #self.try_goompy()
         #self.try_myself()
         
     def make_map(self, latlon0, _z, _w, _h, _t='s'):
@@ -99,28 +98,12 @@ class LocalMapper:
         return tile
 
         
-    def try_goompy(self):
-        WIDTH = 2560#1600#800 5120x1600
-        HEIGHT = 1600#1000#500
-
-        LATITUDE  = self.lla0[1] #37.7913838
-        LONGITUDE = self.lla0[0] #-79.44398934
-        ZOOM = self.zoom
-        MAPTYPE = 'satellite'#roadmap'
-
-        self.goompy = goompy.GooMPy(WIDTH, HEIGHT, LATITUDE, LONGITUDE, ZOOM, MAPTYPE, radius_meters=self.radius, default_ntiles=self.n_tiles, img_fmt='png')
-        self.image = self.goompy.getImage()
-        self.image.save('foo.png')
-
-        self.goompy.bigimage.save('big_foo.png')
-        print('{} {}'.format(self.goompy.northwest, self.goompy.southeast))
-        #pdb.set_trace()
 
 
 class Map:
     def __init__(self, filename):
         print('loading {}'.format(filename))
-        tokens = os.path.splitext(filename)[0].split('_')
+        tokens = os.path.splitext(os.path.basename(filename))[0].split('_')
         self._type, self.zoom, self.gx, self.gy, self.wt, self.ht = tokens[1:]
         self.zoom, self.gx, self.gy = int(self.zoom), int(self.gx), int(self.gy)
         self.tx, self.ty = self.gx, (2**self.zoom - 1) - self.gy
@@ -128,13 +111,13 @@ class Map:
 
     def latlon_to_pixels(self, lat, lon):
         mx, my = self.mercator.LatLonToMeters(lat, lon)
-        print('meters ', mx, my)
+        #print('meters ', mx, my)
         px, py = self.mercator.MetersToPixels(mx, my, self.zoom)
-        print('pixels ', px, py)
+        #print('pixels ', px, py)
         rx, ry = self.mercator.PixelsToRaster(px, py, self.zoom)
-        print('raster ', rx, ry)
+        #print('raster ', rx, ry)
         mx, my = rx-self.tx*tile_size, ry-self.gy*tile_size 
-        print('map ', mx, my)
+        #print('map ', mx, my)
         return mx, my
 
     def pixels_to_latlon(self, mx, my):

@@ -44,7 +44,7 @@ class Node:
     def publish_path(self, _path):
         path_msg = nav_msgs.msg.Path()
         path_msg.header.stamp = rospy.Time.now()
-        path_msg.header.frame_id="world"
+        path_msg.header.frame_id="map"
         for l in _path.points:
             pose = geometry_msgs.msg.PoseStamped()
             pose.pose.position.x, pose.pose.position.y = l

@@ -2,7 +2,6 @@
 <robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 
-  <xacro:include filename="$(find julie_description)/urdf/julie.gazebo.xacro" />
 
   <xacro:macro name="julie_base" params="name publish_bf hq">
 
