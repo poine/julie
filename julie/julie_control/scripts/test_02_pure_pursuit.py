@@ -14,7 +14,7 @@ def list_of_xyzw(q): return [q.x, q.y, q.z, q.w]
 class Node:
     def __init__(self):
 
-        c1, c2, r = np.array([-120., 50.]), np.array([-100., 50.]), 10
+        c1, c2, r = np.array([155., 27.]), np.array([155., 39.]), 7.5
         path = tdg.path_factory.make_oval_path(c1, c2, r)
         path.save('/tmp/foo')
         param = tdg.pure_pursuit.Param()
@@ -24,8 +24,9 @@ class Node:
         
         ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
         self.pub_ackermann = rospy.Publisher(ackermann_cmd_topic, ackermann_msgs.msg.AckermannDriveStamped, queue_size=1)
-        self.pub_path = rospy.Publisher('pure_pursuit/curpath', nav_msgs.msg.Path, queue_size=1)
-
+        self.pub_path = rospy.Publisher('pure_pursuit/path', nav_msgs.msg.Path, queue_size=1)
+        
+        
         rospy.Subscriber('/julie_gazebo/base_link_truth', nav_msgs.msg.Odometry, self.odom_cbk)
 
     def odom_cbk(self, msg):

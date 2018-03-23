@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="map" default="$(find julie_worlds)/maps/enac_full.yaml" />
+  
+  <!--  ****** Maps *****  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)" output="screen">
+    <param name="frame_id" value="/map"/>
+  </node>
+
+
+ <!-- -->
+  <node name="world_to_map_publisher" pkg="tf" type="static_transform_publisher"
+        args="0 0 0  0 0 0 world map 100"/>
+  <!-- -->
+
+</launch>

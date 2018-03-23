@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>julie_worlds</name>
+  <version>0.0.1</version>
+  <description>The julie_worlds package</description>
+
+  <maintainer email="drouin@recherche.enac.fr">Antoine Drouin</maintainer>
+
+  <license>BSD</license>
+
+  <author email="drouin@recherche.enac.fr">Antoine Drouin</author>
+
+  <url type="website">http://wiki.ros.org/julie_description</url>
+  <!--<url type="repository">https://github.com/RobotnikAutomation/rbcar_sim</url>
+  <url type="bugtracker">https://github.com/RobotnikAutomation/rbcar_sim/issues</url> -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+
+  </export>
+</package>
