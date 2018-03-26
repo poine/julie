@@ -18,10 +18,10 @@
 	<bodyname>base_link</bodyname>
 	<topicname>/fix</topicname>
 	<velocitytopicname>/fix_velocity</velocitytopicname>
-	<drift>5.0 5.0 5.0</drift>
-	<gaussiannoise>0.1 0.1 0.1</gaussiannoise>
+	<drift>0.0 0.0 0.0</drift>
+	<gaussiannoise>0. 0. 0.</gaussiannoise>
 	<velocitydrift>0 0 0</velocitydrift>
-	<velocitygaussiannoise>0.1 0.1 0.1</velocitygaussiannoise>
+	<velocitygaussiannoise>0. 0. 0.</velocitygaussiannoise>
 	<referenceLatitude>${nav_ref['lat']}</referenceLatitude>
 	<referenceLongitude>${nav_ref['lon']}</referenceLongitude>
 	<referenceHeading>${nav_ref['heading']}</referenceHeading>

@@ -15,7 +15,7 @@
   <xacro:include filename="$(find julie_description)/urdf/suspension_wheel.urdf.xacro" />
   <!--<xacro:include filename="$(find julie_description)/urdf/sensors.urdf.xacro" /> -->
 
-  <xacro:property name="nav_ref" value="${load_yaml('$(find julie_worlds)/config/ref_enac_outdoor_1.yaml')}" />
+  <xacro:property name="nav_ref" value="${load_yaml('$(find julie_worlds)/config/ref_enac_outdoor_south_east.yaml')}" />
   <xacro:include filename="$(find julie_description)/urdf/julie.gazebo.xacro" />
   
   <!-- Config -->

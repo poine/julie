@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="map" default="$(find julie_worlds)/maps/enac_full.yaml" />
+  <arg name="map" default="$(find julie_worlds)/maps/enac_outdoor_south_east.yaml" />
   
   <!--  ****** Maps *****  -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map)" output="screen">
