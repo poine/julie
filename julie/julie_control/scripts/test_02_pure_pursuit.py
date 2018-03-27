@@ -12,14 +12,12 @@ def array_of_xyz(p): return np.array(list_of_xyz(p))
 def list_of_xyzw(q): return [q.x, q.y, q.z, q.w]
 
 class Node:
-    def __init__(self):
+    def __init__(self, path_filename):
 
-        c1, c2, r = np.array([155., 27.]), np.array([155., 39.]), 7.5
-        path = tdg.path_factory.make_oval_path(c1, c2, r)
-        path.save('/tmp/foo')
+       
         param = tdg.pure_pursuit.Param()
         param.L = 2
-        self.ctl = tdg.pure_pursuit.PurePursuit('/tmp/foo.npz', param, look_ahead=5.5)
+        self.ctl = tdg.pure_pursuit.PurePursuit(path_filename, param, look_ahead=5.5)
         self.vel = 3.
         
         ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
@@ -73,11 +71,18 @@ class Node:
 
         
 
+def make_oval(filename='/tmp/foo'):
+    c1, c2, r = np.array([17.5, -35.]), np.array([17.5, 13.]), 7.
+    path = tdg.path_factory.make_oval_path(c1, c2, r)
+    path.save(filename)
 
-            
+def make_path_from_world():
+    pass
+    
 def main(args):
+    make_oval()
     rospy.init_node('julie_control__test_02_pure_pursuit')
-    Node().run()
+    Node('/tmp/foo.npz').run()
   
 
 if __name__ == '__main__':

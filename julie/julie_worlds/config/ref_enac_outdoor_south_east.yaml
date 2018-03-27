@@ -1,7 +1,12 @@
 %YAML 1.0
 ---
-lat: 43.5642
-lon:  1.4807
-#heading: -36.
-heading: 0.
+# This reference point is the crossing of pedestrian path
+# north of J building
+# 43.563448, 1.482170
+lat: 43.563448
+lon: 1.482170
+heading: -35.7
+#lat: 43.5642
+#lon:  1.4807
+#heading: 0.
 alt: 0.

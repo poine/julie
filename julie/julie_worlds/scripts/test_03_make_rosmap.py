@@ -57,19 +57,20 @@ class RosFrame():
         self.radius_north = prime_vertical_radius * (1 - excentrity2) * temp
         self.radius_east  = prime_vertical_radius * math.cos(rad_of_deg(self.ref_lat))
 
-    # Fixme LATLON order and rotation in world to pos
     def ros_to_world(self, p_ros):
         lat = self.ref_lat + deg_of_rad(( self.crh*p_ros[0] + self.srh*p_ros[1])/self.radius_north)
         lon = self.ref_lon - deg_of_rad((-self.srh*p_ros[0] + self.crh*p_ros[1])/self.radius_east)
         alt = self.ref_alt + p_ros[2]
-        return [lat, lon, alt]
+        return [lon, lat, alt]
 
     def world_to_ros(self, p_lla):
         lon, lat, alt = p_lla
-        x = rad_of_deg(lat-self.ref_lat)*self.radius_north
-        y = -rad_of_deg(lon-self.ref_lon)*self.radius_east
+        dlon_r, dlat_r = rad_of_deg(lon-self.ref_lon), rad_of_deg(lat-self.ref_lat)
+        x_e, x_n = -dlon_r*self.radius_east, dlat_r*self.radius_north
+        x, y = self.crh*x_n - self.srh*x_e, self.srh*x_n + self.crh*x_e
+        #x = rad_of_deg(lat-self.ref_lat)*self.radius_north
+        #y = -rad_of_deg(lon-self.ref_lon)*self.radius_east
         z = alt-self.ref_alt
-        #x, y, z = 1, 0, 0
         return [x, y, z]
 
     def make_ros_tile(self, px_size, res, origin, outfile, gm_file):
@@ -77,7 +78,7 @@ class RosFrame():
         gm_image = PIL.Image.open(gm_file)
         gm_pixels = gm_image.load()
 
-        print px_size
+        print('ros map pixel size: {}'.format(px_size))
         rm = RosMap(px_size, res, origin)
         ros_map_image = PIL.Image.new('RGB', px_size)
         ros_map_pixels = ros_map_image.load()
@@ -86,7 +87,8 @@ class RosFrame():
                 p_ros = rm.pixel_to_world([px, py], 0)
                 p_lla = self.ros_to_world(p_ros)  # position in world frame
                 # FIXME - not same pixels between google and ros....
-                px_gm = np.round(_gm.latlon_to_pixels(p_lla[0], p_lla[1])).astype(int)
+                #print('ros px: {},{}'.format(px, py))
+                px_gm = np.round(_gm.latlon_to_pixels(p_lla[1], p_lla[0])).astype(int)
                 ros_map_pixels[px_size[1]-1-py, px_size[0]-1-px] = gm_pixels[px_gm[0], px_gm[1]]
         ros_map_image.save(outfile)
     
@@ -102,11 +104,11 @@ class RosFrame():
         ros_map_image.save(outfile) 
 
 if __name__ == '__main__':
-    ros_map_name = 'enac_outdoor_south_east'
+    ros_ref_name = 'enac_outdoor_south_east'
 
     rospack = rospkg.RosPack()
     jwd = rospack.get_path('julie_worlds')
-    ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_map_name))
+    ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_ref_name))
 
     gm_file = os.path.join(jwd, 'gmaps/map_s_20_528595_383028_22_22.png')
     
@@ -115,16 +117,16 @@ if __name__ == '__main__':
     #            with yaw as counterclockwise rotation (yaw=0 means no rotation).
     #            Many parts of the system currently ignore yaw.
 
-    res, origin = 0.05, [0., 0., 0.]
-    rl_size = np.array([100., 100.])
+    res, origin = 0.05, [-75., -75., 0.]
+    rl_size = np.array([150., 150.])
     px_size = (rl_size/res).astype(int)
     rf = RosFrame(ref_filename)
-    ros_map_img_filename = os.path.join(jwd, 'maps/{}.png'.format(ros_map_name))
+    ros_map_img_filename = os.path.join(jwd, 'maps/{}.png'.format(ros_ref_name))
     rf.make_ros_tile(px_size, res, origin, outfile=ros_map_img_filename, gm_file=gm_file)
     
-    yaml_output_file = os.path.join(jwd, 'maps/{}.yaml'.format(ros_map_name))
+    yaml_output_file = os.path.join(jwd, 'maps/{}.yaml'.format(ros_ref_name))
     with open(yaml_output_file, 'w') as stream:
-        stream.write('image: {}.png\n'.format(ros_map_name))
+        stream.write('image: {}.png\n'.format(ros_ref_name))
         stream.write('resolution: {}\n'.format(res))
         stream.write('origin: {}\n'.format(origin))
         stream.write('negate: 0\n')

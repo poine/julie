@@ -56,7 +56,7 @@ class Path:
     def compute_headings(self):  # TEST ME
         self.headings = np.zeros(len(self.points))
         for i, p in enumerate(self.points):
-            self.headings[i] = numpy.arctan2(self.points[i+1]-self.points[i])
+            self.headings[i] = np.arctan2(self.points[i+1]-self.points[i])
 
     def compute_dists(self):
         self.dists = np.zeros(len(self.points))
