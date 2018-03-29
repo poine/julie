@@ -61,8 +61,7 @@ if __name__ == '__main__':
     if 1:
         print vertices_lla
         ros_ref_name = 'enac_outdoor_south_east'
-        rospack = rospkg.RosPack()
-        jwd = rospack.get_path('julie_worlds')
+        jwd = rospkg.RosPack().get_path('julie_worlds')
         ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_ref_name))
         rf = rm.RosFrame(ref_filename)
         p_ros = np.array([rf.world_to_ros(_lla) for _lla in vertices_lla])

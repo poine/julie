@@ -28,8 +28,9 @@ class Node:
         
     def truth_cbk(self, msg):
         p = msg.pose.pose.position
-        self.truth_ros = [p.x, p.y, p.z]
-        #print 'truth', self.truth_ros, '->', self.rf.ros_to_world(self.truth_ros)
+        self.truth_ros = np.array([p.x, p.y, p.z])
+        #gnss_pos = np.array(self.rf.ros_to_world(self.truth_ros))
+        #print 'truth', self.truth_ros, '->', gnss_pos, np.array(self.loc_lla)
      
     def publish(self):
         msg = geometry_msgs.msg.PoseWithCovarianceStamped()
@@ -52,6 +53,7 @@ class Node:
         
     
 if __name__ == '__main__':
+    np.set_printoptions(precision=6)
     rospy.init_node('display_gps')
     ref_name = 'enac_outdoor_south_east'
     Node(ref_name).run()
