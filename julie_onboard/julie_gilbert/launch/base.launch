@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+ <!-- GPS receiver:  -->
+  <include file="$(find julie_gilbert)/launch/ublox_gps.launch" />
+</launch>
