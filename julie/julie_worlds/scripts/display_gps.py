@@ -6,14 +6,18 @@ import rospy, rospkg, sensor_msgs.msg, visualization_msgs.msg, geometry_msgs.msg
 
 import test_03_make_rosmap as rm
 
+''' 
+  Displays the GPS fix in a local map frame specified by ref_name file 
+'''
+
+
 class Node:
     def __init__(self, ref_name):
-        rospack = rospkg.RosPack()
-        jwd = rospack.get_path('julie_worlds')
-        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_map_name))
+        jwd = rospkg.RosPack().get_path('julie_worlds')
+        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ref_name))
         self.rf = rm.RosFrame(ref_filename)
         self.marker_gps_pub = rospy.Publisher('/display_gps/gps_marker', geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=1)
-        rospy.Subscriber('/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk)
+        rospy.Subscriber('/ublox_gps/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk)
         rospy.Subscriber('/julie_gazebo/base_link_truth', nav_msgs.msg.Odometry, self.truth_cbk)
         
     def navsat_cbk(self, msg):
