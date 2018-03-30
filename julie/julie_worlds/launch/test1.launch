@@ -10,8 +10,8 @@
 
 
  <!-- -->
-  <node name="odom_to_map_publisher" pkg="tf" type="static_transform_publisher"
-        args="0 0 0  0 0 0 odom map 100"/>
+  <node name="map_to_odom_publisher" pkg="tf" type="static_transform_publisher"
+        args="0 0 0  0 0 0 map odom 100"/>
   <!-- -->
 
 </launch>
