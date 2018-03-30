@@ -6,9 +6,15 @@ import rospkg
 import pdb
 # https://developers.google.com/kml/documentation/kml_tut
 
+'''
+   Convert a svg path made in inkscape over a google map tile assembly
+   to a KML for displaying in google map, or to a twod_d_guidance path
+'''
+
+
 import test_01_make_google_map as gm
 import test_03_make_rosmap as rm
-import two_d_guidance
+import julie_control.two_d_guidance
 
 def inkscape_path_to_lla(path_str, gm_map_path):
     ''' convert inkscape svg path to latlon '''
@@ -53,22 +59,39 @@ inkscape_str_path_A='''m 799.28572,2029.8571 -65,45.7143 -73.57143,53.5715 -65,4
 inkscape_str_path_J='''m 2313.2493,4369.3093 179.8072,256.5788 36.3655,16.1624 36.3655,8.0812 511.1372,-367.6955 22.2233,-42.4264 -16.1624,-52.5279 -268.7006,-365.6753 -62.6295,-6.0609 -143.4416,94.9544 -6.0609,42.4264 292.9442,389.9189 0,36.3654 -323.2488,234.3554 -30.3046,-2.0203 -38.3858,-14.1421 -385.8783,-531.3402 -24.2436,0 -171.726,119.198 -10.1015,28.2842 14.1422,24.2437 20.203,6.0609 155.5635,-109.0965 30.3046,2.0203 169.7056,220.2133'''
 
 
+def write_tdg_path(vertices_lla, ref_filename, outfile):
+        #print vertices_lla
+        rf = rm.RosFrame(ref_filename)
+        p_ros = np.array([rf.world_to_ros(_lla) for _lla in vertices_lla])
+        #print  p_ros
+        _p = julie_control.two_d_guidance.Path(points=p_ros[:,:2], headings=np.zeros(len(p_ros)))
+        _p.save('/tmp/foo')
+
+def write_tdg_xml_path(vertices_lla, ref_filename, outfile):
+    #print vertices_lla
+    rf = rm.RosFrame(ref_filename)
+    p_ros = np.array([rf.world_to_ros(_lla) for _lla in vertices_lla])
+    #print  p_ros
+    with open(outfile, 'w') as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        f.write('<path>\n')
+        for i in range(len(p_ros)-1):
+            f.write('<leg type="line">\n')
+            f.write('{:.3f},{:.3f} {:.3f},{:.3f}\n'.format(p_ros[i][0], p_ros[i][1], p_ros[i+1][0], p_ros[i+1][1]))
+            f.write('</leg>\n')
+        f.write('</path>\n')
+    
+
 if __name__ == '__main__':
     gm_map_path = 'map_s_20_528595_383028_22_22.png'
     vertices_lla = inkscape_path_to_lla(inkscape_str_path_J, gm_map_path)
-    if 0:
-        write_kml(vertices_lla, 'path_J.kml')
     if 1:
-        print vertices_lla
-        ros_ref_name = 'enac_outdoor_south_east'
+        write_kml(vertices_lla, '/home/poine/work/julie/julie/julie_worlds/paths/path_J_1.kml')
+    if 1:
+        ref_name = 'enac_outdoor_south_east'
         jwd = rospkg.RosPack().get_path('julie_worlds')
-        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_ref_name))
-        rf = rm.RosFrame(ref_filename)
-        p_ros = np.array([rf.world_to_ros(_lla) for _lla in vertices_lla])
-        #db.set_trace()
-        # that sucks...
-        
-        _p = two_d_guidance.Path(points=p_ros[:,:2], headings=np.zeros(len(p_ros)))
-        _p.save('/tmp/foo')
-        #print  p_ros
-        
+        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ref_name))
+        outfile = '/tmp/foo'
+        write_tdg_path(vertices_lla, ref_filename, outfile)
+        outfile = '/tmp/foo_path.xml'
+        write_tdg_xml_path(vertices_lla, ref_filename, outfile)

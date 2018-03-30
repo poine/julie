@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-import roslib
-import sys , math, numpy as np, rospy, ackermann_msgs.msg, nav_msgs.msg, tf.transformations, geometry_msgs.msg
+import os, sys , math, numpy as np, rospy, ackermann_msgs.msg, nav_msgs.msg, tf.transformations, geometry_msgs.msg
+import roslib, rospkg
 
-
-import two_d_guidance as tdg
+import julie_control.two_d_guidance as tdg
 
 import pdb
 
@@ -13,8 +12,6 @@ def list_of_xyzw(q): return [q.x, q.y, q.z, q.w]
 
 class Node:
     def __init__(self, path_filename):
-
-       
         param = tdg.pure_pursuit.Param()
         param.L = 2
         self.ctl = tdg.pure_pursuit.PurePursuit(path_filename, param, look_ahead=5.5)
@@ -23,7 +20,6 @@ class Node:
         ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
         self.pub_ackermann = rospy.Publisher(ackermann_cmd_topic, ackermann_msgs.msg.AckermannDriveStamped, queue_size=1)
         self.pub_path = rospy.Publisher('pure_pursuit/path', nav_msgs.msg.Path, queue_size=1)
-        
         
         rospy.Subscriber('/julie_gazebo/base_link_truth', nav_msgs.msg.Odometry, self.odom_cbk)
 
@@ -76,13 +72,12 @@ def make_oval(filename='/tmp/foo'):
     path = tdg.path_factory.make_oval_path(c1, c2, r)
     path.save(filename)
 
-def make_path_from_world():
-    pass
-    
 def main(args):
-    make_oval()
+    #make_oval()
     rospy.init_node('julie_control__test_02_pure_pursuit')
-    Node('/tmp/foo.npz').run()
+    jwd = rospkg.RosPack().get_path('julie_worlds')
+    path_filename = os.path.join(jwd, 'paths/enac_outdoor_south_east/path_J_1.npz')
+    Node(path_filename).run()
   
 
 if __name__ == '__main__':

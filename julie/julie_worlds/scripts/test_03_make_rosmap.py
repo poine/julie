@@ -6,7 +6,7 @@ import rospkg
 import PIL.Image, PIL.ImageDraw
 
 import pdb
-import test_01_make_google_map as gm, two_d_guidance
+import test_01_make_google_map as gm, julie_control.two_d_guidance as tdg
 '''
 
   How do I transform a google tile ( mercator ) to display in gazebo/rviz ?
@@ -104,7 +104,7 @@ class RosFrame():
             p1x, p1y = rm.world_to_pixel(as3d(p1))
             p2x, p2y = rm.world_to_pixel(as3d(p2))
             im_draw.line([(p1x, p1y), (p2x, p2y)], fill=color, width=width)
-        _path = two_d_guidance.Path(load='/tmp/foo.npz')
+        _path = tdg.Path(load='/tmp/foo.npz')
         for i in range(len(_path.points)-1):
             draw_line_on_map(_path.points[i], _path.points[i+1], (255, 255, 255), 2)     
         
