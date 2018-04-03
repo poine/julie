@@ -6,15 +6,14 @@ import rospkg
 import PIL.Image, PIL.ImageDraw
 
 import pdb
-import test_01_make_google_map as gm, test_03_make_rosmap as rm, julie_control.two_d_guidance as tdg
+import test_01_make_google_map as gm, julie_worlds
 '''
 
   How do I transform a google tile ( mercator ) to display in gazebo ?
 
 '''
 
-
-def write_config(name, outfile):
+def write_model_config(name, outfile):
     with open(outfile, 'w') as f:
       f.write('''<?xml version="1.0"?>
 <model>
@@ -34,13 +33,13 @@ def write_config(name, outfile):
 '''.format(name))
 
 
-def write_sdf(model_name, outfile, size):
+def write_model_sdf(model_name, outfile, size):
     with open(outfile, 'w') as f:
         size_str = '{} {}'.format(size[0], size[1])
         f.write('''<?xml version="1.0"?>
 <sdf version="1.6">
 <model name="{}">
-  <pose>0 0 0.5 0 0 0</pose>
+  <pose>0 0 0 0 0 0</pose>
   <static>true</static>
     <link name="link">
       <collision name="collision">
@@ -81,7 +80,8 @@ def write_sdf(model_name, outfile, size):
 '''.format(model_name, size_str, size_str, model_name, model_name))
 
 
-def make_texture(model_name, model_dir, texture_size, texture_resolution, gm_file, ref_filename):
+def make_texture(model_name, model_dir, model_size, texture_resolution, gm_file, ref_filename):
+    texture_size = np.round(model_size*texture_resolution).astype(int)
     texture_name = 'texture_{}.png'.format(model_name)
     script_dir = os.path.join(model_dir, 'materials/scripts/')
     if not os.path.exists(script_dir):
@@ -112,15 +112,22 @@ def make_texture(model_name, model_dir, texture_size, texture_resolution, gm_fil
     if not os.path.exists(texture_dir):
         os.makedirs(texture_dir)
     outfile =  os.path.join(texture_dir, texture_name)
+    print texture_size
     texture_image = PIL.Image.new('RGB', texture_size)
     texture_pixels = texture_image.load()
 
     _gm = gm.Map(gm_file)
     gm_image = PIL.Image.open(gm_file)
     gm_pixels = gm_image.load()
-    _rm = rm.RosFrame(ref_filename)
-    def pixel_to_world(px, py): return  [px/texture_resolution, py/texture_resolution, 0]
+    _rm = julie_worlds.LTPFrame(ref_filename)
 
+    
+    def pixel_to_world(px, py):
+        return  np.array([(px+0.5)/texture_resolution, (texture_size[1]-py-1+0.5)/texture_resolution, 0]) - [model_size[0]/2, model_size[1]/2, 0] 
+
+    def world_to_pixel(lon, lat, alt):
+        pass
+    
     for px in range(texture_size[0]):
         for py in range(texture_size[1]):
             p_ros = pixel_to_world(px, py)   # position in local world
@@ -134,7 +141,7 @@ def make_texture(model_name, model_dir, texture_size, texture_resolution, gm_fil
    
 def create_model(model_name, ref_name, model_size):
     jwd = rospkg.RosPack().get_path('julie_worlds')
-    gm_file = os.path.join(jwd, 'gmaps/map_s_20_528595_383028_22_22.png')
+    gm_filename = os.path.join(jwd, 'gmaps/map_s_20_528595_383028_22_22.png')
     ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ref_name))
     
     jgd = rospkg.RosPack().get_path('julie_gazebo')
@@ -142,11 +149,10 @@ def create_model(model_name, ref_name, model_size):
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
     
-    write_config('enac ground plane', os.path.join(model_dir, 'model.config'))
-    write_sdf(model_name, os.path.join(model_dir, 'model.sdf'), model_size)
+    write_model_config('enac ground plane', os.path.join(model_dir, 'model.config'))
+    write_model_sdf(model_name, os.path.join(model_dir, 'model.sdf'), model_size)
     texture_resolution = 10. # pixel per meter
-    texture_size = np.round(model_size*texture_resolution).astype(int)
-    make_texture(model_name, model_dir, texture_size, texture_resolution, gm_file, ref_filename)
+    make_texture(model_name, model_dir, model_size, texture_resolution, gm_filename, ref_filename)
     
 if __name__ == '__main__':
     ref_name = 'enac_outdoor_south_east'
