@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="record" pkg="rosbag" type="record" args="-o /data/incoming/ /ublox_gps/fix /ublox_gps/fix_velocity /velodyne_points"/> 
+
+</launch>
+
