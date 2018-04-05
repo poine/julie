@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:arg name="vlp16_enabled" default="false" />
+  
   <!-- Dimensions -->
   <xacro:property name="ground_clearance" value="0.235"/>
   <xacro:property name="wheelbase" value="1.650"/>
@@ -13,8 +15,9 @@
   <!-- Import elements -->
   <xacro:include filename="$(find julie_description)/urdf/base.urdf.xacro" />
   <xacro:include filename="$(find julie_description)/urdf/suspension_wheel.urdf.xacro" />
-  <!--<xacro:include filename="$(find julie_description)/urdf/sensors.urdf.xacro" /> -->
+  <xacro:include filename="$(find julie_description)/urdf/sensors.urdf.xacro" />
 
+  <!-- this is needed for gazebo simlation (GPS..). Wrong place... --> 
   <xacro:property name="nav_ref" value="${load_yaml('$(find julie_worlds)/config/ref_enac_outdoor_south_east.yaml')}" />
   <xacro:include filename="$(find julie_description)/urdf/julie.gazebo.xacro" />
   
@@ -23,9 +26,11 @@
   
   <!-- Robots Elements -->
 
-  <xacro:julie_base name="julie" publish_bf="false" hq="${hq}" />
+  <xacro:julie_base name="julie" hq="${hq}" />
 
+  <!-- WTF.... -->
   <xacro:ros_control/>
+  
   <xacro:front_wheel lr_prefix="left" fr_prefix="front"
                      lr_reflect="1" fr_reflect="1"/>
   <xacro:front_wheel lr_prefix="right" fr_prefix="front"
@@ -36,6 +41,6 @@
                     lr_reflect="-1" fr_reflect="-1"/>
 
   <!-- SENSORS -->
-  
+  <xacro:julie_sensors/>
  
 </robot>

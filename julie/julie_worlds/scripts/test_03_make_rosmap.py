@@ -3,13 +3,13 @@
 
 import sys, os, time, logging, math, numpy as np, yaml
 import rospkg
-import PIL.Image
+import PIL.Image, PIL.ImageDraw
 
 import pdb
-import test_01_make_google_map as gm
+import test_01_make_google_map as gm, julie_control.two_d_guidance as tdg, julie_worlds
 '''
 
-  How do I transform a google tile ( mercator ) to display in gazebo/rviz ?
+  How do I transform a google tile ( mercator ) to display in rviz ?
 
 '''
 
@@ -24,93 +24,68 @@ class RosMap():
         self.origin = np.array(origin)
 
     def world_to_pixel(self, p_w):
-        p1 = (p_w - self.origin)/self.resolution
-        print p_w, '->', p1
-        return p1[0], self.size_px[1]-p1[1]-1
+        p1 = (p_w[:2] - self.origin[:2])/self.resolution 
+        px, py = int(np.round(p1[0])), int(np.round(self.size_px[1]-p1[1]-1))
+        return px, py
 
     def pixel_to_world(self, p_px, alt=0.):
-        p1 = np.array(p_px)*self.resolution
-        return self.origin + [p1[0], p1[1], alt]
+        p_wx, p_wy = (p_px[0]+0.5)*self.resolution, (self.size_px[1]-p_px[1]-1+0.5)*self.resolution
+        return self.origin + [p_wx, p_wy, alt]
 
-    def save(self, name):
-        pass
+    def draw_test_map(self):
+        self.map_image = PIL.Image.new('RGB', self.size_px)
+        self.image_draw = PIL.ImageDraw.Draw(self.map_image)
+        self.draw_line((0, 0), (5,0), (255, 255, 255), 2)
+        self.draw_line((0, 0), (0,5), (128, 128, 128), 2)
 
-    
-class RosFrame():
-    '''
-     Convert from ROS frame ( simple equirectangular projection ) to/from others
-    '''
 
-    def __init__(self, ref_filename):
-        with open(ref_filename, 'r') as stream:
-            ref_data = yaml.load(stream)
-        print ref_data
-        
-        self.ref_lat, self.ref_lon, self.ref_alt, self.ref_heading = [ref_data[s] for s in ['lat', 'lon', 'alt', 'heading']]
-        rhr = rad_of_deg(self.ref_heading)
-        self.crh, self.srh = math.cos(rhr), math.sin(rhr)
-        equatorial_radius = 6378137.0
-        flattening = 1.0/298.257223563
-        excentrity2 = 2*flattening - flattening*flattening
-        temp = 1.0 / (1.0 - excentrity2 * math.sin(rad_of_deg(self.ref_lat)) * math.sin(rad_of_deg(self.ref_lat)))
-        prime_vertical_radius = equatorial_radius * math.sqrt(temp)
-        self.radius_north = prime_vertical_radius * (1 - excentrity2) * temp
-        self.radius_east  = prime_vertical_radius * math.cos(rad_of_deg(self.ref_lat))
-
-    def ros_to_world(self, p_ros):
-        lat = self.ref_lat + deg_of_rad(( self.crh*p_ros[0] + self.srh*p_ros[1])/self.radius_north)
-        lon = self.ref_lon - deg_of_rad((-self.srh*p_ros[0] + self.crh*p_ros[1])/self.radius_east)
-        alt = self.ref_alt + p_ros[2]
-        return [lon, lat, alt]
-
-    def world_to_ros(self, p_lla):
-        lon, lat, alt = p_lla
-        dlon_r, dlat_r = rad_of_deg(lon-self.ref_lon), rad_of_deg(lat-self.ref_lat)
-        x_e, x_n = -dlon_r*self.radius_east, dlat_r*self.radius_north
-        x, y = self.crh*x_n - self.srh*x_e, self.srh*x_n + self.crh*x_e
-        #x = rad_of_deg(lat-self.ref_lat)*self.radius_north
-        #y = -rad_of_deg(lon-self.ref_lon)*self.radius_east
-        z = alt-self.ref_alt
-        return [x, y, z]
-
-    def make_ros_tile(self, px_size, res, origin, outfile, gm_file):
+    def draw_gm_tiles(self, ref_filename, gm_file):
+        ltp = julie_worlds.LTPFrame(ref_filename)
         _gm = gm.Map(gm_file)
         gm_image = PIL.Image.open(gm_file)
         gm_pixels = gm_image.load()
 
-        print('ros map pixel size: {}'.format(px_size))
-        rm = RosMap(px_size, res, origin)
-        ros_map_image = PIL.Image.new('RGB', px_size)
-        ros_map_pixels = ros_map_image.load()
-        for px in range(px_size[0]):
-            for py in range(px_size[1]):
+        self.map_image = PIL.Image.new('RGB', self.size_px)
+        self.image_draw = PIL.ImageDraw.Draw(self.map_image)
+        map_pixels = self.map_image.load()
+        for px in range(self.size_px[0]):
+            for py in range(self.size_px[1]):
                 p_ros = rm.pixel_to_world([px, py], 0)
-                p_lla = self.ros_to_world(p_ros)  # position in world frame
-                # FIXME - not same pixels between google and ros....
-                #print('ros px: {},{}'.format(px, py))
+                p_lla = ltp.ros_to_world(p_ros)  # position in world frame
                 px_gm = np.round(_gm.latlon_to_pixels(p_lla[1], p_lla[0])).astype(int)
-                ros_map_pixels[px_size[1]-1-py, px_size[0]-1-px] = gm_pixels[px_gm[0], px_gm[1]]
-        ros_map_image.save(outfile)
-    
-    def make_ros_testmap(self, size_px, res, origin, outfile, gm_file):
-        rm = RosMap(size_px, res, origin)
-        ros_map_image = PIL.Image.new('RGB', px_size)
-        ros_map_pixels = ros_map_image.load()
-        for i in range(0, 6):
-            px, py = rm.world_to_pixel([i, 0, 0])
-            ros_map_pixels[px, py] = (255,255,255)
-            px, py = rm.world_to_pixel([0, i, 0])
-            ros_map_pixels[px, py] = (128,128,128)
-        ros_map_image.save(outfile) 
+                map_pixels[px, py] = gm_pixels[px_gm[0], px_gm[1]]
 
+    def draw_line(self, p1, p2, color, width):
+        def as3d(_p): return [_p[0], _p[1], 0]
+        p1x, p1y = self.world_to_pixel(as3d(p1))
+        p2x, p2y = self.world_to_pixel(as3d(p2))
+        self.image_draw.line([(p1x, p1y), (p2x, p2y)], fill=color, width=width)
+        
+    def draw_path(self, path_filename):
+        _path = tdg.Path(load=path_filename)
+        for i in range(len(_path.points)-1):
+            self.draw_line(_path.points[i], _path.points[i+1], (255, 255, 255), 2)
+                
+    def save(self, map_dir, map_name):
+        img_filename = os.path.join(map_dir, '{}.png'.format(map_name))
+        self.map_image.save(img_filename)
+        self.write_yaml(map_dir, map_name)
+
+    def write_yaml(self, map_dir, map_name):
+        yaml_output_file = os.path.join(map_dir, '{}.yaml'.format(map_name))
+        with open(yaml_output_file, 'w') as stream:
+            stream.write('image: {}.png\n'.format(ros_ref_name))
+            stream.write('resolution: {}\n'.format(res))
+            stream.write('origin: {}\n'.format(origin))
+            stream.write('negate: 0\n')
+            stream.write('occupied_thresh: 0.65\n')
+            stream.write('free_thresh: 0.196\n')
+  
 if __name__ == '__main__':
     ros_ref_name = 'enac_outdoor_south_east'
-
-    rospack = rospkg.RosPack()
-    jwd = rospack.get_path('julie_worlds')
-    ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_ref_name))
-
-    gm_file = os.path.join(jwd, 'gmaps/map_s_20_528595_383028_22_22.png')
+    jw_dir = rospkg.RosPack().get_path('julie_worlds')
+    ref_filename = os.path.join(jw_dir, 'config/ref_{}.yaml'.format(ros_ref_name))
+    gm_filename = os.path.join(jw_dir, 'gmaps/map_s_20_528595_383028_22_22.png')
     
     # From map server documentation:
     #   origin : The 2-D pose of the lower-left pixel in the map, as (x, y, yaw),
@@ -120,15 +95,13 @@ if __name__ == '__main__':
     res, origin = 0.05, [-75., -75., 0.]
     rl_size = np.array([150., 150.])
     px_size = (rl_size/res).astype(int)
-    rf = RosFrame(ref_filename)
-    ros_map_img_filename = os.path.join(jwd, 'maps/{}.png'.format(ros_ref_name))
-    rf.make_ros_tile(px_size, res, origin, outfile=ros_map_img_filename, gm_file=gm_file)
+    rm = RosMap(px_size, res, origin)
+    #rm.draw_test_map()
+    rm.draw_gm_tiles(ref_filename, gm_filename)
+    path_filename = os.path.join(jw_dir, 'paths/enac_outdoor_south_east/path_J_1.npz')
+    rm.draw_path(path_filename)
     
-    yaml_output_file = os.path.join(jwd, 'maps/{}.yaml'.format(ros_ref_name))
-    with open(yaml_output_file, 'w') as stream:
-        stream.write('image: {}.png\n'.format(ros_ref_name))
-        stream.write('resolution: {}\n'.format(res))
-        stream.write('origin: {}\n'.format(origin))
-        stream.write('negate: 0\n')
-        stream.write('occupied_thresh: 0.65\n')
-        stream.write('free_thresh: 0.196\n')
+    map_dir, map_name = os.path.join(jw_dir, 'maps/'), ros_ref_name
+    rm.save(map_dir, map_name)
+    
+ 

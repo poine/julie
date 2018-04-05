@@ -3,25 +3,23 @@
 
 
 
-  <xacro:macro name="julie_base" params="name publish_bf hq">
+  <xacro:macro name="julie_base" params="name hq">
 
 
     <!-- BASE FOOTPRINT -->
-    <xacro:if value="${publish_bf}">
-      <link name="base_footprint">
-	<visual>
-          <origin xyz="0 0 0" rpy="0 0 0" />
-          <geometry>
-            <box size="0.001 0.001 0.001" />
-          </geometry>
-	</visual>
-      </link>
-      <joint name="base_footprint_joint" type="fixed">
-	<origin xyz="0 0 ${ground_clearance}" rpy="0 0 0" />  <!-- height is the clearance -->
-	<parent link="base_footprint"/>
-	<child link="base_link" />
-      </joint>
-    </xacro:if>
+    <link name="base_footprint">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+      </visual>
+    </link>
+    <joint name="base_footprint_joint" type="fixed">
+      <origin xyz="0 0 ${ground_clearance}" rpy="0 0 0" />  <!-- height is the clearance -->
+      <parent link="base_footprint"/>
+      <child link="base_link" />
+    </joint>
 
     <!-- BASE_LINK -->
     <link name="base_link">
@@ -53,6 +51,6 @@
 	</geometry>
       </collision>
     </link>
-
+    
   </xacro:macro>
 </robot>

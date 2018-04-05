@@ -1,3 +1,46 @@
 <?xml version="1.0"?>
+<robot name="sensors" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <xacro:macro name="julie_sensors">
+
+    <!-- GPS -->
+    <link name="gps_link">
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+          <box size="0.1 0.1 0.01" />
+	</geometry>
+      </visual>
+    </link>
+    <joint name="gps_link_joint" type="fixed">
+      <origin xyz="-0.5 0 1.5" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="gps_link" />
+    </joint>
+
+    <!-- LIDAR -->
+    <xacro:if value="$(arg vlp16_enabled)">
+      <xacro:include filename="$(find julie_description)/urdf/sensor_velodyne_vlp16.urdf.xacro"/>
+      <VLP-16 parent="base_link" name="velodyne" topic="/velodyne_points">
+	<origin xyz="0.5 0 1.7" rpy="0 0 0" />
+      </VLP-16>
+    </xacro:if>
+    <!--
+    <link name="lidar_link">
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+          <box size="0.1 0.1 0.01" />
+	</geometry>
+      </visual>
+    </link>
+    <joint name="lidar_link_joint" type="fixed">
+      <origin xyz="0.5 0 1.5" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="lidar_link" />
+    </joint>
+    -->
+  </xacro:macro>
+  
+</robot>
 

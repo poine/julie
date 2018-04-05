@@ -23,9 +23,9 @@
       <uri>model://sun</uri>
     </include>
     <!-- A textured ground plane -->
-    <!-- http://gazebosim.org/tutorials?tut=ros_roslaunch -->
     <include>
-      <uri>model://enac_full_ground_plane</uri>
+      <uri>model://enac_outdoor_south_east_ground_plane</uri>
+      <!--<uri>enac_full_ground_plane</uri>-->
     </include>
   
   </world>

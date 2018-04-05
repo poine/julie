@@ -4,16 +4,20 @@
 import os, logging, math, numpy as np, pyproj
 import rospy, rospkg, sensor_msgs.msg, visualization_msgs.msg, geometry_msgs.msg,  nav_msgs.msg
 
-import test_03_make_rosmap as rm
+import julie_worlds
+
+''' 
+  Displays the GPS fix in a local map frame specified by ref_name file 
+'''
+
 
 class Node:
     def __init__(self, ref_name):
-        rospack = rospkg.RosPack()
-        jwd = rospack.get_path('julie_worlds')
-        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ros_map_name))
-        self.rf = rm.RosFrame(ref_filename)
+        jwd = rospkg.RosPack().get_path('julie_worlds')
+        ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ref_name))
+        self.rf = julie_worlds.LTPFrame(ref_filename)
         self.marker_gps_pub = rospy.Publisher('/display_gps/gps_marker', geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=1)
-        rospy.Subscriber('/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk)
+        rospy.Subscriber('/ublox_gps/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk)
         rospy.Subscriber('/julie_gazebo/base_link_truth', nav_msgs.msg.Odometry, self.truth_cbk)
         
     def navsat_cbk(self, msg):
@@ -24,8 +28,9 @@ class Node:
         
     def truth_cbk(self, msg):
         p = msg.pose.pose.position
-        self.truth_ros = [p.x, p.y, p.z]
-        #print 'truth', self.truth_ros, '->', self.rf.ros_to_world(self.truth_ros)
+        self.truth_ros = np.array([p.x, p.y, p.z])
+        #gnss_pos = np.array(self.rf.ros_to_world(self.truth_ros))
+        #print 'truth', self.truth_ros, '->', gnss_pos, np.array(self.loc_lla)
      
     def publish(self):
         msg = geometry_msgs.msg.PoseWithCovarianceStamped()
@@ -48,6 +53,7 @@ class Node:
         
     
 if __name__ == '__main__':
+    np.set_printoptions(precision=6)
     rospy.init_node('display_gps')
     ref_name = 'enac_outdoor_south_east'
     Node(ref_name).run()

@@ -13,19 +13,22 @@
       </plugin>
 
       <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
-	<alwayson>true</alwayson>
-	<updaterate>1.0</updaterate>
-	<bodyname>base_link</bodyname>
-	<topicname>/fix</topicname>
-	<velocitytopicname>/fix_velocity</velocitytopicname>
-	<drift>0.0 0.0 0.0</drift>
-	<gaussiannoise>0. 0. 0.</gaussiannoise>
-	<velocitydrift>0 0 0</velocitydrift>
-	<velocitygaussiannoise>0. 0. 0.</velocitygaussiannoise>
+	<updateRate>4.</updateRate>
+	<bodyName>base_link</bodyName>
+	<frameId>GNSS</frameId>
+	<topicName>/ublox_gps/fix</topicName>
+	<velocityTopicName>/ublox_gps/fix_velocity</velocityTopicName>
 	<referenceLatitude>${nav_ref['lat']}</referenceLatitude>
 	<referenceLongitude>${nav_ref['lon']}</referenceLongitude>
 	<referenceHeading>${nav_ref['heading']}</referenceHeading>
 	<referenceAltitude>${nav_ref['alt']}</referenceAltitude>
+	<offset>0.0 0.0 0.0</offset>
+	<drift>0.0 0.0 0.0</drift>
+	<driftFrequency>0. 0. 0.</driftFrequency>
+	<gaussianNoise>0. 0. 0.</gaussianNoise>
+	<velocityDrift>0 0 0</velocityDrift>
+	<velocityDriftFrequency>0. 0. 0.</velocityDriftFrequency>
+	<velocityGaussianNoise>0. 0. 0.</velocityGaussianNoise>
       </plugin>
       
       <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
