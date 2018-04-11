@@ -2,7 +2,7 @@
 <sdf version="1.6">
   <world name="default">
     <physics type="ode">
-      <gravity>0 0 -9.8</gravity>
+      <!--<gravity>0 0 -9.8</gravity>-->
       <ode>
         <solver>
           <!--type>quick</type>

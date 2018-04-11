@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<library path="lib/libjulie_ackermann_controller">
+
+  <class name="julie_control/JulieAckermannController" type="julie_controller::JulieAckermannController" base_class_type="controller_interface::ControllerBase">
+    <description>
+      The JulieAckermannController runs golf cart. It expects... whatever ENAC will be able to purchase, or nothing (to avoid being disappointed).
+    </description>
+  </class>
+
+</library>

@@ -9,7 +9,9 @@
         <robotNamespace>/julie</robotNamespace>
         <robotParam>robot_description</robotParam>
         <controlPeriod>0.001</controlPeriod>
-        <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> 
+        <!--<controlPeriod>0.01</controlPeriod>-->
+	<!--<robotSimType>julie_hardware_gazebo/JulieHardwareInterface</robotSimType>-->
       </plugin>
 
       <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
