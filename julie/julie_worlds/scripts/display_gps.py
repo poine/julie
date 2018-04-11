@@ -2,10 +2,10 @@
 
 
 import os, logging, math, numpy as np, pyproj
-import rospy, rospkg, sensor_msgs.msg, visualization_msgs.msg, geometry_msgs.msg,  nav_msgs.msg
+import rospy, rospkg, sensor_msgs.msg, visualization_msgs.msg, geometry_msgs.msg, nav_msgs.msg
 
 import julie_worlds
-
+import pdb
 ''' 
   Displays the GPS fix in a local map frame specified by ref_name file 
 '''
@@ -16,16 +16,22 @@ class Node:
         jwd = rospkg.RosPack().get_path('julie_worlds')
         ref_filename = os.path.join(jwd, 'config/ref_{}.yaml'.format(ref_name))
         self.rf = julie_worlds.LTPFrame(ref_filename)
-        self.marker_gps_pub = rospy.Publisher('/display_gps/gps_marker', geometry_msgs.msg.PoseWithCovarianceStamped, queue_size=1)
-        rospy.Subscriber('/ublox_gps/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk)
+        self.marker_gps_pub = rospy.Publisher('/display_gps/gps_marker', nav_msgs.msg.Odometry, queue_size=1)
+        rospy.Subscriber('/ublox_gps/fix', sensor_msgs.msg.NavSatFix, self.navsat_cbk, 'pos')
+        rospy.Subscriber('/ublox_gps/fix_velocity', geometry_msgs.msg.TwistWithCovarianceStamped, self.navsat_cbk, 'vel')
         rospy.Subscriber('/julie_gazebo/base_link_truth', nav_msgs.msg.Odometry, self.truth_cbk)
         
-    def navsat_cbk(self, msg):
-        self.loc_lla = [msg.longitude, msg.latitude, msg.altitude]
-        self.loc_ros =  self.rf.world_to_ros(self.loc_lla)
-        #print 'nav', self.loc_lla , self.loc_ros
-        self.publish()
-        
+    def navsat_cbk(self, msg, arg):
+        if arg == 'pos':
+            self.loc_lla = [msg.longitude, msg.latitude, msg.altitude]
+            self.loc_ros =  self.rf.world_to_ros(self.loc_lla)
+            self.publish()
+        elif arg == 'vel':
+            # what frame is this expressed in....
+            #print msg.twist.twist.linear
+            #msg.twist.twist.angular
+            #pdb.set_trace()
+            
     def truth_cbk(self, msg):
         p = msg.pose.pose.position
         self.truth_ros = np.array([p.x, p.y, p.z])
@@ -33,7 +39,7 @@ class Node:
         #print 'truth', self.truth_ros, '->', gnss_pos, np.array(self.loc_lla)
      
     def publish(self):
-        msg = geometry_msgs.msg.PoseWithCovarianceStamped()
+        msg = nav_msgs.msg.Odometry()
         msg.header.frame_id = "map"
         msg.header.stamp = rospy.Time.now()
         msg.pose.pose.position.x = self.loc_ros[0]
