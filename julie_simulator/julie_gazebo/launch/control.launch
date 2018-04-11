@@ -2,7 +2,7 @@
 <launch>
   <!-- load the controllers -->
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-	output="screen" ns="/julie" args="--shutdown-time 1 --namespace=/julie
+	output="screen" ns="/julie" args="--namespace=/julie
 					  left_front_shock_controller
 					  left_steering_joint_controller
 					  left_front_axle_controller
