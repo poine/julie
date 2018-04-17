@@ -18,8 +18,8 @@ class JulieHardwareInterface : public hardware_interface::RobotHW
  public:
   JulieHardwareInterface();
   bool start();
-  void write();
   void read();
+  void write();
   bool shutdown();
    
  private:

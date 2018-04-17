@@ -4,7 +4,7 @@
 
 
 #define __NAME "julie_hardware_interface"
-const std::string joint_name_[NB_JOINTS] = {"left_wheel_joint","right_wheel_joint", "steering_joint"};
+const std::string joint_name_[NB_JOINTS] = {"left_rear_axle","right_rear_axle", "left_steering_joint"};
 #define SAMPLE_RATE_HZ 100
 #define DT (1./SAMPLE_RATE_HZ)
 
@@ -37,10 +37,10 @@ bool JulieHardwareInterface::start(){
  return true;
 }
 
-void JulieHardwareInterface::write(){
+void JulieHardwareInterface::read(){
 }
 
-void JulieHardwareInterface::read(){
+void JulieHardwareInterface::write(){
 }
 
 bool JulieHardwareInterface::shutdown(){
