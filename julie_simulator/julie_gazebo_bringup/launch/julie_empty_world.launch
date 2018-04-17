@@ -2,6 +2,7 @@
 <launch>
   <arg name="world_name" default="worlds/empty.world"/>
   <arg name="robot_model" default="julie"/>
+  <arg name="robot_initial_loc" default="-x 0 -y 0 -z 1"/>
   
   <!-- gazebo_control launch file -->
   <include file="$(find julie_gazebo)/launch/control.launch" />
@@ -22,7 +23,7 @@
   
   <!--  spawn the robot in gazebo -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-        args="-urdf -model julie -param robot_description -x 14 -y 4 -z 1"/>
+        args="-urdf -model julie -param robot_description $(arg robot_initial_loc)"/>
   
   <!-- start robot_control node -->
   <include file="$(find julie_gazebo_ackermann_controller)/launch/julie_gazebo_ackermann_controller.launch"/>

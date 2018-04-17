@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="robot_model" default="julie"/> 
-  <arg name="world_name" default="enac_outdoor_full.world"/>
+  <arg name="world_name" default="enac_south_east.world"/>
   
   <include file="$(find julie_gazebo_bringup)/launch/julie_empty_world.launch">
     <arg name="world_name" value="$(find julie_gazebo)/worlds/$(arg world_name)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
+    <arg name="robot_initial_loc" value="-x 0 -y 37 -z 1"/>
   </include>
 
 </launch>
