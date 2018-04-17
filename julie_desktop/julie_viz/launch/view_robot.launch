@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find julie_description)/robots/julie.urdf.xacro'" />
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find julie_description)/urdf/julie.urdf'" />
   <param name="robot_description" command="$(arg urdf_file)" />
 
   <param name="use_gui" value="true"/>

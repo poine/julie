@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+  <rosparam command="load" file="$(find julie_control)/config/control_none.yaml" />
+
+  <node name="base_controller_spawner" pkg="controller_manager" type="spawner" args="julie_joint_publisher"/>
+
+</launch>
+
