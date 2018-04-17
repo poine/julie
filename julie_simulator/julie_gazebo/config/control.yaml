@@ -52,3 +52,6 @@ julie:
   joint_read_state_controller:
     type: joint_state_controller/JointStateController 
     publish_rate: 100.0
+
+  julie_ackermann_controller:
+    type: julie_control/JulieAckermannController

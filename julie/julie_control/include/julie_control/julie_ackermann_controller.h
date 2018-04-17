@@ -4,6 +4,8 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <pluginlib/class_list_macros.h>
 
+#include "julie_control/jac_input_manager.h"
+
 namespace julie_controller {
   
   class JulieAckermannController:
@@ -11,10 +13,18 @@ namespace julie_controller {
     {
     public:
       JulieAckermannController();
+      bool init(hardware_interface::RobotHW* hw,
+		ros::NodeHandle& root_nh,
+		ros::NodeHandle& controller_nh);
+      void starting(const ros::Time& now);
       void update(const ros::Time& , const ros::Duration&);
+      void stopping(const ros::Time&);
+	
     private:
       // values output to the hardware interface
       double steering_angle_;
+      hardware_interface::JointHandle left_steering_joint_;
+      hardware_interface::JointHandle right_steering_joint_;
     };
   
 }
