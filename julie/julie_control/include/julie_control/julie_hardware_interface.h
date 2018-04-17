@@ -25,6 +25,7 @@ class JulieHardwareInterface : public hardware_interface::RobotHW
  private:
   hardware_interface::JointStateInterface    js_interface_;
   hardware_interface::EffortJointInterface   ej_interface_;
+  hardware_interface::VelocityJointInterface vj_interface_;
   hardware_interface::PositionJointInterface pj_interface_;
  
   // Joints
@@ -32,6 +33,7 @@ class JulieHardwareInterface : public hardware_interface::RobotHW
   double joint_velocity_[NB_JOINTS];
   double joint_effort_[NB_JOINTS];
   double joint_effort_command_[NB_JOINTS];
+  double joint_velocity_command_[NB_JOINTS];
   double joint_position_command_[NB_JOINTS];
 };
   

@@ -9,7 +9,7 @@ const std::string joint_name_[NB_JOINTS] = {"left_rear_axle","right_rear_axle", 
 #define DT (1./SAMPLE_RATE_HZ)
 
 JulieHardwareInterface::JulieHardwareInterface() {
-
+  // https://github.com/ros-controls/ros_control/wiki/hardware_interface
   // register joints
   for (int i=0; i<NB_JOINTS; i++) {
     joint_position_[i] = 0.;
@@ -17,17 +17,25 @@ JulieHardwareInterface::JulieHardwareInterface() {
     joint_effort_[i] = 0.;
     joint_effort_command_[i] = 0.;
     joint_position_command_[i] = 0.;
+    // register join state interface
+    hardware_interface::JointStateHandle _state_handle(joint_name_[i], &joint_position_[i], &joint_velocity_[i], &joint_effort_[i]);
+    js_interface_.registerHandle(_state_handle);
+    // register joint position or vel interface
     if (i<2) {
-      ej_interface_.registerHandle(hardware_interface::JointHandle(
-	js_interface_.getHandle(joint_name_[i]), &joint_effort_command_[i]));
+      hardware_interface::JointHandle _handle_vel(js_interface_.getHandle(joint_name_[i]), &joint_velocity_command_[i]);
+      vj_interface_.registerHandle(_handle_vel);
     }
     else {
-      pj_interface_.registerHandle(hardware_interface::JointHandle(
-        js_interface_.getHandle(joint_name_[i]), &joint_position_command_[i]));
+      hardware_interface::JointHandle _handle_pos(js_interface_.getHandle(joint_name_[i]), &joint_position_command_[i]);
+      vj_interface_.registerHandle(_handle_pos);
     }
   }
+
+ 
+  
   registerInterface(&js_interface_);
   registerInterface(&ej_interface_);
+  registerInterface(&vj_interface_);
   registerInterface(&pj_interface_);
 
 
