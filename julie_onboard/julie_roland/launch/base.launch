@@ -3,7 +3,7 @@
   <arg name="config" default="julie"/>
   
   <!-- Hardware interface:  -->
-  <node name="robot_hardware" pkg="rosmip_control" type="rosmip_hardware_interface_node" />
+  <node name="roland_robot_hardware" pkg="julie_control" type="julie_hardware_interface_node" />
 
   <!-- Robot Description:  -->
   <include file="$(find julie_description)/launch/description.launch">

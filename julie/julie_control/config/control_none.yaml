@@ -2,13 +2,13 @@ julie_joint_publisher:
   type: joint_state_controller/JointStateController
   publish_rate: 10
   extra_joints:
-    left_front_axle: 0
-    left_front_shock: 0
-    left_rear_axle: 0
-    left_rear_shock: 0
-    left_steering_joint: 0
-    right_front_axle: 0
-    right_front_shock: 0
-    right_rear_axle: 0
-    right_rear_shock: 0
-    right_steering_joint: 0
+    - name: 'left_front_axle'
+    - name: 'left_front_shock'
+    - name: 'left_rear_axle'
+    - name: 'left_rear_shock'
+    - name: 'left_steering_joint'
+    - name: 'right_front_axle'
+    - name: 'right_front_shock'
+    - name: 'right_rear_axle'
+    - name: 'right_rear_shock'
+    - name: 'right_steering_joint'
