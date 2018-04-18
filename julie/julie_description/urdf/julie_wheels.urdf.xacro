@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Shock absorber -->
+  <xacro:macro name="shock"
+               params="lr_prefix fr_prefix lr_reflect fr_reflect child">
+
+    <joint name="${lr_prefix}_${fr_prefix}_shock" type="prismatic">
+      <parent link="base_link"/>
+      <child link="${child}"/>
+
+      <origin xyz="${fr_reflect * wheelbase / 2 + wheelbase / 2}
+                   ${lr_reflect * ((hex_hub_dist / 2) - wheel_axle_length)}
+                   ${(wheel_travel / 2) - shock_z_offset}"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="${-wheel_travel / 2}" upper="${wheel_travel / 2}"
+             effort="${shock_eff_limit}" velocity="${shock_vel_limit}"/>
+      <joint_properties damping="${suspension_joint_damping}" friction="{suspension_joint_friction}"/>
+    </joint>
+
+    <transmission name="${lr_prefix}_${fr_prefix}_shock_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${lr_prefix}_${fr_prefix}_shock">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${lr_prefix}_${fr_prefix}_shock_act">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  </xacro:macro>
+
+
+  
+  <!-- The "wheel" macro defines an axle carrier, axle, and wheel. -->
+  <xacro:macro name="wheel" params="lr_prefix fr_prefix lr_reflect">
+
+    <link name="${lr_prefix}_${fr_prefix}_axle_carrier">
+    </link>
+
+    <!-- The left and right axles have the same axis so that identical
+         rotation values cause the wheels to rotate in the same direction. -->
+    <joint name="${lr_prefix}_${fr_prefix}_axle" type="continuous">
+      <parent link="${lr_prefix}_${fr_prefix}_axle_carrier"/>
+      <child link="${lr_prefix}_${fr_prefix}_wheel"/>
+      <origin rpy="${degrees_90} 0 ${degrees_180}"/>
+      <axis xyz="0 0 -1"/>
+      <limit effort="${wheel_axle_eff_limit}" velocity="${wheel_axle_vel_limit}"/>
+      <joint_properties damping="${wheel_joint_damping}" friction="{wheel_joint_friction}"/>
+    </joint>
+
+
+    <transmission name="${lr_prefix}_${fr_prefix}_axle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${lr_prefix}_${fr_prefix}_axle">
+        <!-- hardwareInterface>EffortJointInterface</hardwareInterface -->
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${lr_prefix}_${fr_prefix}_axle_act">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <gazebo reference="${lr_prefix}_${fr_prefix}_axle_carrier">
+      <material>Gazebo/Black</material>
+    </gazebo>
+
+
+    <link name="${lr_prefix}_${fr_prefix}_wheel">
+      <visual>
+        <xacro:unless value="${wheel_hq_visual}">
+          <origin xyz="0
+                       0
+                       ${lr_reflect * (wheel_axle_length - (tire_width / 2 - hex_hub_depth))}"/>
+          <geometry>
+            <cylinder radius="${tire_dia / 2}" length="${tire_width}"/>
+          </geometry>
+          <material name="tire_material"/>
+        </xacro:unless>
+        <xacro:if value="${wheel_hq_visual}">
+          <origin xyz="0
+                       0
+                       ${lr_reflect * (wheel_axle_length - (tire_width / 2 - hex_hub_depth))}" rpy="0 ${PI/2} 0"/>
+          <geometry>
+            <mesh filename="package://julie_description/meshes/wheel.dae"/>
+            <!--<cylinder radius="${tire_dia / 2}" length="${tire_width}"/> -->
+          </geometry>
+        </xacro:if>
+      </visual>
+
+      <collision>
+        <origin xyz="0                     
+                     0
+                     ${lr_reflect * (wheel_axle_length - (tire_width / 2 - hex_hub_depth))}"/>
+        <geometry>
+          <cylinder radius="${tire_dia / 2}" length="${tire_width}"/>
+        </geometry>
+      </collision>
+
+      <xacro:hollow_cylinder_inertia
+          inner_rad="${hub_dia / 2}" outer_rad="${tire_dia / 2}"
+          height="${tire_width}" mass="${wheel_mass}"/>
+    </link>
+
+    <gazebo reference="${lr_prefix}_${fr_prefix}_wheel">
+      <material>Gazebo/Black</material>
+    </gazebo>
+  </xacro:macro>
+
+
+
+  <!-- Rear wheel -->
+  <xacro:macro name="rear_wheel"
+               params="lr_prefix fr_prefix lr_reflect fr_reflect">
+    <xacro:shock lr_prefix="${lr_prefix}" fr_prefix="${fr_prefix}"
+                 lr_reflect="${lr_reflect}" fr_reflect="${fr_reflect}"
+                 child="${lr_prefix}_${fr_prefix}_axle_carrier"/>
+    <xacro:wheel lr_prefix="${lr_prefix}" fr_prefix="${fr_prefix}"
+                 lr_reflect="${lr_reflect}"/>
+  </xacro:macro>
+
+  
+
+</robot>
