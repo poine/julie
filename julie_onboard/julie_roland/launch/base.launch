@@ -10,4 +10,6 @@
     <arg name="config" value="$(arg config)" />
   </include>
 
+  <include file="$(find julie_control)/launch/control_none.launch"/>
+    
 </launch>

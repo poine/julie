@@ -4,12 +4,12 @@
 
 
 #define __NAME "julie_hardware_interface"
-const std::string joint_name_[NB_JOINTS] = {"left_rear_axle","right_rear_axle", "left_steering_joint"};
+const std::string joint_name_[NB_JOINTS] = {"left_rear_axle","right_rear_axle", "left_steering_joint", "right_steering_joint"};
 #define SAMPLE_RATE_HZ 100
 #define DT (1./SAMPLE_RATE_HZ)
 
+// https://github.com/ros-controls/ros_control/wiki/hardware_interface
 JulieHardwareInterface::JulieHardwareInterface() {
-  // https://github.com/ros-controls/ros_control/wiki/hardware_interface
   // register joints
   for (int i=0; i<NB_JOINTS; i++) {
     joint_position_[i] = 0.;
@@ -30,8 +30,6 @@ JulieHardwareInterface::JulieHardwareInterface() {
       vj_interface_.registerHandle(_handle_pos);
     }
   }
-
- 
   
   registerInterface(&js_interface_);
   registerInterface(&ej_interface_);
@@ -46,6 +44,11 @@ bool JulieHardwareInterface::start(){
 }
 
 void JulieHardwareInterface::read(){
+  double secs =ros::Time::now().toSec();
+  joint_position_[0] = sin(secs);
+  joint_position_[1] = sin(secs);
+  joint_position_[2] = sin(secs);
+  joint_position_[3] = sin(secs);
 }
 
 void JulieHardwareInterface::write(){

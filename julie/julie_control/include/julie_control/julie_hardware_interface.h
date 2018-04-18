@@ -10,7 +10,7 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/imu_sensor_interface.h>
 
-#define NB_JOINTS 3 // two wheels plus steering
+#define NB_JOINTS 4 // two wheels plus two steering
 
 class JulieHardwareInterface : public hardware_interface::RobotHW
 {
