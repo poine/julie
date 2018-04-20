@@ -12,7 +12,7 @@
   <xacro:property name="chassis_mass"          value="200" />
   <xacro:property name="chassis_vert_offset"   value="0.3" />
   <xacro:property name="chassis_horiz_offset"  value="0.8" />
-  <xacro:property name="chassis_hq_visual"     value="false" />
+  <xacro:property name="chassis_hq_visual"     value="true" />
   <!-- wheels -->
   <xacro:property name="wheel_axle_length" value="0.120"/>
   <xacro:property name="tire_width" value="0.2"/>
@@ -26,7 +26,7 @@
   <xacro:property name="wheel_mass" value="8.0"/>
   <xacro:property name="shock_eff_limit" value="1000"/>
   <xacro:property name="shock_vel_limit" value="1000"/>
-  <xacro:property name="suspension_joint_damping" value="0." />
+  <xacro:property name="suspension_joint_damping" value="0.5" />
   <xacro:property name="suspension_joint_friction" value="0." />
 
   <xacro:property name="steering_servo_stall_torque" value="500"/>
@@ -37,7 +37,7 @@
   <xacro:property name="wheel_axle_joint_damping"   value="0.01" />
   <xacro:property name="wheel_axle_joint_friction"  value="0.01" />
 
-  <xacro:property name="wheel_hq_visual"       value="false" />
+  <xacro:property name="wheel_hq_visual"       value="true" />
 
 
 

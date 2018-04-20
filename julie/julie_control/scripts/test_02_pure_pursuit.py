@@ -17,7 +17,8 @@ class Node:
         self.ctl = tdg.pure_pursuit.PurePursuit(path_filename, param, look_ahead=5.5)
         self.vel = 3.
         
-        ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
+        #ackermann_cmd_topic = '/julie_gazebo_ackermann_controller/command'
+        ackermann_cmd_topic = '/julie/julie_ackermann_controller/cmd_ack'
         self.pub_ackermann = rospy.Publisher(ackermann_cmd_topic, ackermann_msgs.msg.AckermannDriveStamped, queue_size=1)
         self.pub_path = rospy.Publisher('pure_pursuit/path', nav_msgs.msg.Path, queue_size=1)
         

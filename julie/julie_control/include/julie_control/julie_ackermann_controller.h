@@ -1,10 +1,16 @@
 #ifndef JULIE_CONTROL__JULIE_ACKERMANN_CONTROLLER_H
 #define JULIE_CONTROL__JULIE_ACKERMANN_CONTROLLER_H
+
+#include <ros/ros.h>
+#include <geometry_msgs/TwistStamped.h>
+#include <ackermann_msgs/AckermannDriveStamped.h>
+
 #include <controller_interface/multi_interface_controller.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <pluginlib/class_list_macros.h>
 
 #include "julie_control/jac_input_manager.h"
+#include "julie_control/jac_odometry.h"
 
 namespace julie_controller {
   
@@ -21,8 +27,12 @@ namespace julie_controller {
       void stopping(const ros::Time&);
 	
     private:
-      // values output to the hardware interface
-      double steering_angle_;
+      void cmdVelCallback(const ackermann_msgs::AckermannDriveStamped &msg);
+      //InputManager _im;
+      JulieOdometry jod_;
+      ros::Subscriber sub_command_;
+      double steering_sp_;
+      double speed_sp_;
       hardware_interface::JointHandle left_steering_joint_;
       hardware_interface::JointHandle right_steering_joint_;
       hardware_interface::JointHandle left_axle_joint_;

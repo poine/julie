@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="default">
+    <!-- Not sure why I had that here, but it does not help, anyway -->
+    <!--
     <physics type="ode">
       <ode>
         <solver>
@@ -16,7 +18,8 @@
         </constraints>
       </ode>
       <max_step_size>0.001</max_step_size>
-    </physics>
+      </physics>
+      -->
     <!-- A global light source -->
     <include>
       <uri>model://sun</uri>
