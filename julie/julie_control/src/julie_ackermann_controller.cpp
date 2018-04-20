@@ -46,7 +46,7 @@ namespace julie_controller {
   void JulieAckermannController::update(const ros::Time& now, const ros::Duration& dt) {
     //ROS_INFO("JulieAckermannController::update()");
     double secs = now.toSec();
-    double _v = -0.5;//*sin(secs);
+    double _v = 0.5;//*sin(secs);
     left_axle_joint_.setCommand(_v);
     right_axle_joint_.setCommand(_v);
 

@@ -71,7 +71,7 @@
       <parent link="${lr_prefix}_${fr_prefix}_axle_carrier_link"/>
       <child link="${lr_prefix}_${fr_prefix}_wheel_link"/>
       <origin rpy="${degrees_90} 0 ${degrees_180}"/>
-      <axis xyz="0 0 -1"/>
+      <axis xyz="0 0 1"/>
       <limit effort="${wheel_axle_joint_eff_limit}" velocity="${wheel_axle_joint_vel_limit}"/>
       <dynamic damping="${wheel_axle_joint_damping}" friction="{wheel_axle_joint_friction}"/>
     </joint>
