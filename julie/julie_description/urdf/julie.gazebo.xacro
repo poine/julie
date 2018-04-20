@@ -3,7 +3,7 @@
 
 
   <!-- ros control plugin -->
-  <xacro:macro name="ros_control">
+  <xacro:macro name="julie_gazebo_ros_control">
     <gazebo>
       <plugin name="ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/julie</robotNamespace>

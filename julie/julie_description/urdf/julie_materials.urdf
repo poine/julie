@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
   </material>
@@ -8,4 +9,15 @@
     <color rgba="0 0 0.8 0.5"/>
   </material>
 
+  <material name="transp_green">
+    <color rgba="0 0.8 0 0.5"/>
+  </material>
+
+  <material name="transp_yellow">
+    <color rgba="0.8 0.8 0 0.5"/>
+  </material>
+ 
+  <material name="tire_material">
+    <color rgba="0 0 0.8 0.5"/>
+  </material>
 </robot>

@@ -25,6 +25,8 @@ namespace julie_controller {
       double steering_angle_;
       hardware_interface::JointHandle left_steering_joint_;
       hardware_interface::JointHandle right_steering_joint_;
+      hardware_interface::JointHandle left_axle_joint_;
+      hardware_interface::JointHandle right_axle_joint_;
     };
   
 }

@@ -6,13 +6,13 @@
 <robot name="julie" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Configuration -->
-  <xacro:property name="chassis_length"        value="2.4" />
-  <xacro:property name="chassis_width"         value="1.1" />
-  <xacro:property name="chassis_height"        value="1.2" />
+  <xacro:property name="chassis_length"        value="1.8" />
+  <xacro:property name="chassis_width"         value="0.6" />
+  <xacro:property name="chassis_height"        value="0.6" />
   <xacro:property name="chassis_mass"          value="200" />
-  <xacro:property name="chassis_vert_offset"   value="0.6" />
-  <xacro:property name="chassis_horiz_offset"  value="0.5" />
-  <xacro:property name="chassis_hq_visual"     value="true" />
+  <xacro:property name="chassis_vert_offset"   value="0.3" />
+  <xacro:property name="chassis_horiz_offset"  value="0.8" />
+  <xacro:property name="chassis_hq_visual"     value="false" />
   <!-- wheels -->
   <xacro:property name="wheel_axle_length" value="0.120"/>
   <xacro:property name="tire_width" value="0.2"/>
@@ -24,27 +24,29 @@
   <xacro:property name="wheel_travel" value="0.1"/>
   <xacro:property name="shock_z_offset" value="0.05"/>
   <xacro:property name="wheel_mass" value="8.0"/>
-  <xacro:property name="shock_eff_limit" value="100"/>
+  <xacro:property name="shock_eff_limit" value="1000"/>
   <xacro:property name="shock_vel_limit" value="1000"/>
-  <xacro:property name="suspension_joint_damping" value="0.2" />
-  <xacro:property name="suspension_joint_friction" value="0.7" />
-    
-  <xacro:property name="wheel_axle_eff_limit"  value="204.95"/>
-  <xacro:property name="wheel_axle_vel_limit"  value="39.02"/>
+  <xacro:property name="suspension_joint_damping" value="0." />
+  <xacro:property name="suspension_joint_friction" value="0." />
 
-  <xacro:property name="wheel_joint_damping"   value="0.01" />
-  <xacro:property name="wheel_joint_friction"  value="0.01" />
-  <xacro:property name="wheel_hq_visual"       value="true" />
+  <xacro:property name="steering_servo_stall_torque" value="500"/>
+  <xacro:property name="steering_servo_no_load_speed" value="25"/>
+
+  <xacro:property name="wheel_axle_joint_eff_limit"  value="204.95"/>
+  <xacro:property name="wheel_axle_joint_vel_limit"  value="39.02"/>
+  <xacro:property name="wheel_axle_joint_damping"   value="0.01" />
+  <xacro:property name="wheel_axle_joint_friction"  value="0.01" />
+
+  <xacro:property name="wheel_hq_visual"       value="false" />
 
 
 
   
   <!-- Constants -->
-  <xacro:property name="PI" value="3.1415926535897931"/>
   <!-- Degree-to-radian conversions -->
-  <xacro:property name="degrees_45"  value="${PI/4.}"/>
-  <xacro:property name="degrees_90"  value="${PI/2.}"/>
-  <xacro:property name="degrees_180" value="${PI}"/>
+  <xacro:property name="degrees_45"  value="${pi/4.}"/>
+  <xacro:property name="degrees_90"  value="${pi/2.}"/>
+  <xacro:property name="degrees_180" value="${pi}"/>
   
   <!-- Import Macros -->
   <xacro:include filename="$(find julie_description)/urdf/julie_inertias.urdf.xacro" />
@@ -52,13 +54,23 @@
   <xacro:include filename="$(find julie_description)/urdf/julie_chassis.urdf.xacro" />
   <xacro:include filename="$(find julie_description)/urdf/julie_wheels.urdf.xacro" />
 
+  <xacro:property name="nav_ref" value="${load_yaml('$(find julie_worlds)/config/ref_enac_outdoor_south_east.yaml')}" />
+  <xacro:include filename="$(find julie_description)/urdf/julie.gazebo.xacro" />
+  
+  <!-- Load plugins in gazebo -->
+  <xacro:julie_gazebo_ros_control/>
+
   <!-- Describe the Robot -->
   <link name="base_link"/>
   <xacro:julie_chassis />
+  <xacro:front_wheel lr_prefix="left" fr_prefix="front"
+                     lr_reflect="1" fr_reflect="1"/>
+  <xacro:front_wheel lr_prefix="right" fr_prefix="front"
+                     lr_reflect="-1" fr_reflect="1"/>
+  <xacro:rear_wheel  lr_prefix="left" fr_prefix="rear"
+                     lr_reflect="1" fr_reflect="-1"/>
+  <xacro:rear_wheel  lr_prefix="right" fr_prefix="rear"
+                     lr_reflect="-1" fr_reflect="-1"/>
 
-  <xacro:rear_wheel lr_prefix="left" fr_prefix="rear"
-                    lr_reflect="1" fr_reflect="-1"/>
-  <xacro:rear_wheel lr_prefix="right" fr_prefix="rear"
-                    lr_reflect="-1" fr_reflect="-1"/>
-  
+
 </robot>

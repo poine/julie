@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="world_name" default="worlds/empty.world"/>
-  <arg name="robot_model" default="julie"/>
+  <arg name="robot_model" default="julie_1"/>
   <arg name="robot_initial_loc" default="-x 0 -y 0 -z 1"/>
   
   <!-- gazebo_control launch file -->
-  <include file="$(find julie_gazebo)/launch/control.launch" />
+  <include file="$(find julie_gazebo)/launch/control_$(arg robot_model).launch">
+    <arg name="robot_model" default="$(arg robot_model)"/>
+  </include>
   
   <!-- start gazebo simulation -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -18,19 +20,21 @@
   </include>
 
   <!-- Load the URDF into the ROS Parameter Server -->
-      <param name="robot_description"
-       command="$(find xacro)/xacro --inorder '$(find julie_description)/urdf/$(arg robot_model).urdf'" />
+  <param name="robot_description"
+	 command="$(find xacro)/xacro --inorder '$(find julie_description)/urdf/$(arg robot_model).urdf'" />
   
   <!--  spawn the robot in gazebo -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
         args="-urdf -model julie -param robot_description $(arg robot_initial_loc)"/>
   
-  <!-- start robot_control node -->
-  <include file="$(find julie_gazebo_ackermann_controller)/launch/julie_gazebo_ackermann_controller.launch"/>
-  <!-- initialize odometry -->
-  <!-- <node pkg="rosservice" type="rosservice" name="initialize_odometry" args="call \-\-wait /julie_gazebo_ackermann_controller/set_odometry 14 4 1 0"/> -->
-  
-  <!-- start joystick -->
-  <!-- <include file="$(find rbcar_joystick)/launch/rbcar_joystick.launch"/> -->
+  <group if="$(eval robot_model == 'julie_1')">
+    <!-- start robot_control node -->
+    <include file="$(find julie_gazebo_ackermann_controller)/launch/julie_gazebo_ackermann_controller.launch"/>
+    <!-- initialize odometry -->
+    <!-- <node pkg="rosservice" type="rosservice" name="initialize_odometry" args="call \-\-wait /julie_gazebo_ackermann_controller/set_odometry 14 4 1 0"/> -->
+    
+    <!-- start joystick -->
+    <!-- <include file="$(find rbcar_joystick)/launch/rbcar_joystick.launch"/> -->
+  </group>
 
 </launch>

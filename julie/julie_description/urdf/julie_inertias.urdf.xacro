@@ -39,11 +39,20 @@
     </inertial>
   </xacro:macro>
 
-  <xacro:macro name="inertial_hollow_tube_with_pose" params="mass inner_rad outer_rad height">
+  <xacro:macro name="inertial_hollow_tube_with_pose" params="mass inner_rad outer_rad height *origin">
     <inertial>
+      <xacro:insert_block name="origin"/>
       <mass value="${mass}"/>
       <xacro:hollow_cylinder_inertia mass="${mass}" inner_rad="${inner_rad}" outer_rad="${outer_rad}" height="${height}" />
     </inertial>
   </xacro:macro>
+
+  <xacro:macro name="inertial_null">
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </xacro:macro>
+  
 
 </robot>

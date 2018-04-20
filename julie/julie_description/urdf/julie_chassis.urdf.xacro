@@ -25,9 +25,9 @@
       <collision>
 	<origin xyz="0 0 0"/>
 	<geometry>
-          <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+          <box size="0.1 0.1 0.1"/>
 	</geometry>
-      </collision>
+	</collision>
       <xacro:inertial_cuboid_with_pose mass="${chassis_mass}" x_length="${chassis_length}" y_length="${chassis_width}" z_length="${chassis_height}">
 	<origin xyz="0 0 0" rpy="0 0 0"/>
       </xacro:inertial_cuboid_with_pose>
