@@ -40,10 +40,6 @@
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <gazebo_msgs/ModelStates.h>
-#include <robotnik_msgs/set_mode.h>
-#include <robotnik_msgs/get_mode.h>
-#include <robotnik_msgs/set_odometry.h>
-#include <robotnik_msgs/ptz.h>
 
 #include "ackermann_msgs/AckermannDriveStamped.h"
 
@@ -303,7 +299,7 @@ RbcarControllerClass(ros::NodeHandle h) :
   orientation_x_ = 0.0; orientation_y_ = 0.0; orientation_z_ = 0.0; orientation_w_ = 1.0;
 
   // Advertise controller services
-  srv_SetOdometry_ = rbcar_robot_control_node_handle.advertiseService("set_odometry",  &RbcarControllerClass::srvCallback_SetOdometry, this);
+  //srv_SetOdometry_ = rbcar_robot_control_node_handle.advertiseService("set_odometry",  &RbcarControllerClass::srvCallback_SetOdometry, this);
 
   // Subscribe to joint states topic
   joint_state_sub_ = rbcar_robot_control_node_handle.subscribe<sensor_msgs::JointState>("/julie/joint_states", 1, &RbcarControllerClass::jointStateCallback, this);
@@ -630,16 +626,16 @@ void setCommand(const ackermann_msgs::AckermannDriveStamped &msg)
 }
 
 // Service SetOdometry 
-bool srvCallback_SetOdometry(robotnik_msgs::set_odometry::Request &request, robotnik_msgs::set_odometry::Response &response )
-{
+//bool srvCallback_SetOdometry(robotnik_msgs::set_odometry::Request &request, robotnik_msgs::set_odometry::Response &response )
+//{
   // ROS_INFO("rbcar_odometry::set_odometry: request -> x = %f, y = %f, a = %f", req.x, req.y, req.orientation);
-  robot_pose_px_ = request.x;
-  robot_pose_py_ = request.y;
-  robot_pose_pa_ = request.orientation;
+//  robot_pose_px_ = request.x;
+//  robot_pose_py_ = request.y;
+//  robot_pose_pa_ = request.orientation;
   
-  response.ret = true;
-  return true;
-}
+//  response.ret = true;
+//  return true;
+//}
 
 // Topic command
 void jointStateCallback(const sensor_msgs::JointStateConstPtr& msg)

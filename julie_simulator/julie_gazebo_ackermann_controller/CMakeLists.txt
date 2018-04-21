@@ -6,7 +6,6 @@ find_package(catkin REQUIRED COMPONENTS
   ackermann_msgs
   geometry_msgs
   nav_msgs
-  robotnik_msgs
   roscpp
   sensor_msgs
   tf

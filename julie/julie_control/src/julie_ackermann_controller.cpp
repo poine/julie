@@ -24,8 +24,9 @@ namespace julie_controller {
     left_axle_joint_  = e2->getHandle("left_rear_axle_joint");
     right_axle_joint_ = e2->getHandle("right_rear_axle_joint");
 
-    //jod_.init();
-    
+    const double wheel_base = 1.650;
+    size_t velocity_rolling_window_size = 10;
+    jod_.init(wheel_base, velocity_rolling_window_size);
     //sub_command_ = controller_nh.subscribe("cmd_vel", 1, &JulieAckermannController::cmdVelCallback, this);
     sub_command_ = controller_nh.subscribe("cmd_ack", 1, &JulieAckermannController::cmdVelCallback, this);
     return true;
@@ -37,6 +38,7 @@ namespace julie_controller {
    *******************************************************************************/
   void JulieAckermannController::starting(const ros::Time& now) {
     ROS_INFO("JulieAckermannController::starting()");
+    jod_.starting(now);
   }
   
   /*******************************************************************************
@@ -45,16 +47,20 @@ namespace julie_controller {
    *******************************************************************************/
   void JulieAckermannController::update(const ros::Time& now, const ros::Duration& dt) {
     //ROS_INFO("JulieAckermannController::update()");
-    double secs = now.toSec();
-    double _v = 0.5;//*sin(secs);
-    left_axle_joint_.setCommand(_v);
-    right_axle_joint_.setCommand(_v);
+    //double secs = now.toSec();
 
-    //double _v2 = 0.5*sin(0.33*secs);
     double left_wheel_rvel_ = left_axle_joint_.getVelocity();
     double right_wheel_rvel_ = right_axle_joint_.getVelocity();
     //input_manager_.update(now);
     jod_.update(left_wheel_rvel_, right_wheel_rvel_, left_axle_joint_.getPosition(), now);
+
+    double _vel_err = jod_.getLinear() - speed_sp_;
+    const double Kp = -0.4;
+    double _vel_cmd = 0.1*speed_sp_ +  Kp*_vel_err;//*sin(secs);
+    //ROS_DEBUG_THROTTLE(0.1, "vel %f", jod_.getLinear());
+    ROS_INFO("vel %f sp %f", jod_.getLinear(), speed_sp_);    
+    left_axle_joint_.setCommand(_vel_cmd);
+    right_axle_joint_.setCommand(_vel_cmd);
 
     //ROS_INFO("sp %f meas %f", steering_sp_, left_steering_joint_.getPosition());
     left_steering_joint_.setCommand(steering_sp_);
