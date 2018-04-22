@@ -56,40 +56,6 @@ Visualization Manager:
       Unreliable: false
       Use Timestamp: false
       Value: true
-    - Angle Tolerance: 0.100000001
-      Class: rviz/Odometry
-      Covariance:
-        Orientation:
-          Alpha: 0.5
-          Color: 255; 255; 127
-          Color Style: Unique
-          Frame: Local
-          Offset: 1
-          Scale: 1
-          Value: true
-        Position:
-          Alpha: 0.300000012
-          Color: 204; 51; 204
-          Scale: 1
-          Value: true
-        Value: true
-      Enabled: true
-      Keep: 500
-      Name: Odometry
-      Position Tolerance: 0.100000001
-      Shape:
-        Alpha: 1
-        Axes Length: 1
-        Axes Radius: 0.100000001
-        Color: 255; 25; 0
-        Head Length: 0.300000012
-        Head Radius: 0.100000001
-        Shaft Length: 1
-        Shaft Radius: 0.0500000007
-        Value: Arrow
-      Topic: /julie_gazebo/base_link_truth
-      Unreliable: false
-      Value: true
     - Class: rviz/Axes
       Enabled: true
       Length: 1
@@ -107,30 +73,31 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_front_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        left_front_wheel:
+        chassis_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_rear_axle_carrier:
+        left_front_axle_carrier_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        left_rear_wheel:
+          Value: true
+        left_front_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_rear_axle_carrier_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_rear_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -139,20 +106,23 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        right_front_axle_carrier:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        right_front_wheel:
+          Value: true
+        right_front_axle_carrier_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_rear_axle_carrier:
+        right_front_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        right_rear_wheel:
+          Value: true
+        right_rear_axle_carrier_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_rear_wheel_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -161,42 +131,13 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Alpha: 1
-      Axes Length: 1
-      Axes Radius: 0.100000001
-      Class: rviz/PoseWithCovariance
-      Color: 255; 25; 0
-      Covariance:
-        Orientation:
-          Alpha: 0.5
-          Color: 255; 255; 127
-          Color Style: Unique
-          Frame: Local
-          Offset: 1
-          Scale: 1
-          Value: true
-        Position:
-          Alpha: 0.300000012
-          Color: 204; 51; 204
-          Scale: 1
-          Value: true
-        Value: true
-      Enabled: true
-      Head Length: 0.300000012
-      Head Radius: 0.100000001
-      Name: PoseWithCovariance
-      Shaft Length: 1
-      Shaft Radius: 0.0500000007
-      Shape: Arrow
-      Topic: /display_gps/gps_marker
-      Unreliable: false
-      Value: true
     - Class: rviz/Group
       Displays:
         - Alpha: 1
@@ -251,6 +192,108 @@ Visualization Manager:
           Value: true
       Enabled: false
       Name: path_editor
+    - Angle Tolerance: 0.100000001
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.300000012
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 1000
+      Name: GPS
+      Position Tolerance: 0.100000001
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.100000001
+        Color: 255; 25; 0
+        Head Length: 0.300000012
+        Head Radius: 0.100000001
+        Shaft Length: 1
+        Shaft Radius: 0.0500000007
+        Value: Arrow
+      Topic: /display_gps/gps_marker
+      Unreliable: false
+      Value: true
+    - Angle Tolerance: 0.100000001
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.300000012
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: false
+      Enabled: true
+      Keep: 1000
+      Name: Odometry
+      Position Tolerance: 0.100000001
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.100000001
+        Color: 255; 255; 0
+        Head Length: 0.300000012
+        Head Radius: 0.100000001
+        Shaft Length: 1
+        Shaft Radius: 0.0500000007
+        Value: Arrow
+      Topic: /julie/julie_ackermann_controller/odom
+      Unreliable: false
+      Value: true
+    - Angle Tolerance: 0.100000001
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.300000012
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 500
+      Name: Thruth
+      Position Tolerance: 0.100000001
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.100000001
+        Color: 255; 25; 0
+        Head Length: 0.300000012
+        Head Radius: 0.100000001
+        Shaft Length: 1
+        Shaft Radius: 0.0500000007
+        Value: Arrow
+      Topic: /julie_gazebo/base_link_truth
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -276,25 +319,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 135.319656
+      Distance: 178.273148
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -7.69471169
-        Y: 13.1685114
-        Z: -7.70064688
+        X: 4.67141008
+        Y: 13.9571648
+        Z: -24.2854176
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.649796486
+      Pitch: 0.654796898
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.31593132
+      Yaw: 4.39225626
     Saved: ~
 Window Geometry:
   Displays:
@@ -312,5 +355,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 2012
-  X: 2993
-  Y: 0
+  X: 2708
+  Y: 44

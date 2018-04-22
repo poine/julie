@@ -25,7 +25,8 @@ include_directories(
 add_library(julie_ackermann_controller
   src/julie_ackermann_controller.cpp
   src/jac_input_manager.cpp
-  src/jac_odometry.cpp)
+  src/jac_odometry.cpp
+  src/jac_publisher.cpp)
 target_link_libraries(julie_ackermann_controller
   ${catkin_LIBRARIES}
   )

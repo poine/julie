@@ -11,7 +11,7 @@ namespace julie_controller {
     , linear_(0.0)
     , angular_(0.0)
     , wheelbase_(1.65)
-    , wheel_radius_(0.47)
+    , wheel_radius_(0.47/2)
     , velocity_rolling_window_size_(velocity_rolling_window_size)
     , linear_acc_(RollingWindow::window_size = velocity_rolling_window_size)
     , angular_acc_(RollingWindow::window_size = velocity_rolling_window_size) {
@@ -42,7 +42,18 @@ namespace julie_controller {
 
     const double linear = (left_wheel_joint_velocity + right_wheel_joint_velocity)/2.*wheel_radius_*dt;
     const double angular = linear * tan(steering_joint_position) / wheelbase_;
-
+    /// integrate for position and heading
+    const double curvature_radius = wheelbase_ / cos(M_PI/2.0 - steering_joint_position);
+    if (fabs(curvature_radius) > 0.0001) {
+      const double elapsed_distance = linear;
+      const double elapsed_angle = elapsed_distance / curvature_radius;
+      const double x_curvature = curvature_radius * sin(elapsed_angle);
+      const double y_curvature = curvature_radius * (cos(elapsed_angle) - 1.0);
+      const double wheel_heading = heading_ + steering_joint_position;
+      y_ += x_curvature * sin(wheel_heading) + y_curvature * cos(wheel_heading);
+      x_ += x_curvature * cos(wheel_heading) - y_curvature * sin(wheel_heading);
+      heading_ += elapsed_angle;
+    }
     /// Estimate speeds using a rolling mean to filter them out:
     linear_acc_(linear/dt);
     angular_acc_(angular/dt);

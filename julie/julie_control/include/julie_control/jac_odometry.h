@@ -23,7 +23,11 @@ namespace julie_controller {
 		const ros::Time &now);
     void setWheelbase(double wheelbase) { wheelbase_ = wheelbase; }
     void setVelocityRollingWindowSize(size_t velocity_rolling_window_size);
+    double getHeading() const { return heading_; }
+    double getX() const { return x_ + wheelbase_ * (1.0 - cos(heading_)); }
+    double getY() const { return y_ - wheelbase_ * sin(heading_); }
     double getLinear() const { return linear_; }
+    double getAngular() const { return angular_; }
     
   private:
     /// Rolling mean accumulator and window:

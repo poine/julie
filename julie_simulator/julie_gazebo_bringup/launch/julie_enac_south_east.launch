@@ -7,6 +7,7 @@
     <arg name="world_name" value="$(find julie_gazebo)/worlds/$(arg world_name)"/>
     <arg name="robot_model" value="$(arg robot_model)"/>
     <arg name="robot_initial_loc" value="-x 0 -y 37 -z 1"/>
+    <arg name="robot_initial_ori" value="-R 0 -P 0 -Y 3.1"/>
   </include>
 
 </launch>
