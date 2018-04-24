@@ -54,6 +54,11 @@ namespace julie_controller {
       x_ += x_curvature * cos(wheel_heading) - y_curvature * sin(wheel_heading);
       heading_ += elapsed_angle;
     }
+    else {
+      // looks like we don't really go there - i'd like to be really convinced why
+      ROS_INFO("JulieOdometry::update() curvature_radius < 0.0001");
+    }
+    
     /// Estimate speeds using a rolling mean to filter them out:
     linear_acc_(linear/dt);
     angular_acc_(angular/dt);

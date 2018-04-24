@@ -27,7 +27,7 @@ JulieHardwareInterface::JulieHardwareInterface() {
     }
     else {
       hardware_interface::JointHandle _handle_pos(js_interface_.getHandle(joint_name_[i]), &joint_position_command_[i]);
-      vj_interface_.registerHandle(_handle_pos);
+      pj_interface_.registerHandle(_handle_pos);
     }
   }
   

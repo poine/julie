@@ -10,10 +10,24 @@ catkin_python_setup()
 find_package(catkin REQUIRED COMPONENTS  roscpp
                                          rospy
                                          controller_interface
-                                         controller_manager)
+                                         controller_manager
+					 std_msgs
+					 message_generation)
+add_message_files(
+  FILES
+  RawOdom.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES julie_ackermann_controller)
+  LIBRARIES julie_ackermann_controller
+  CATKIN_DEPENDS message_runtime)
+
 
 ###########
 ## Build ##
@@ -26,7 +40,9 @@ add_library(julie_ackermann_controller
   src/julie_ackermann_controller.cpp
   src/jac_input_manager.cpp
   src/jac_odometry.cpp
-  src/jac_publisher.cpp)
+  src/jac_publisher.cpp
+  src/jac_raw_odom_publisher.cpp
+  )
 target_link_libraries(julie_ackermann_controller
   ${catkin_LIBRARIES}
   )

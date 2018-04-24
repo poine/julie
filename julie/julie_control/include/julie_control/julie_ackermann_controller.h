@@ -12,6 +12,7 @@
 #include "julie_control/jac_input_manager.h"
 #include "julie_control/jac_odometry.h"
 #include "julie_control/jac_publisher.h"
+#include "julie_control/jac_raw_odom_publisher.h"
 
 namespace julie_controller {
   
@@ -28,13 +29,10 @@ namespace julie_controller {
       void stopping(const ros::Time&);
 	
     private:
-      void cmdVelCallback(const ackermann_msgs::AckermannDriveStamped &msg);
-      //InputManager _im;
+      JulieInputManager input_manager_;
       JulieOdometry odometry_;
       JACPublisher publisher_;
-      ros::Subscriber sub_command_;
-      double steering_sp_;
-      double speed_sp_;
+      JACRawOdomPublisher raw_odom_publisher_;
       hardware_interface::JointHandle left_steering_joint_;
       hardware_interface::JointHandle right_steering_joint_;
       hardware_interface::JointHandle left_axle_joint_;

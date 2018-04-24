@@ -49,7 +49,7 @@ def decorate(ax, title=None, xlab=None, ylab=None, legend=None, xlim=None, ylim=
     if ylab:
         ax.yaxis.set_label_text(ylab)
     if title:
-        plt.title(title, my_title_spec)
+        plt.title(title)#, my_title_spec)
     if legend <> None:
         plt.legend(legend, loc='best')
     if xlim <> None:
