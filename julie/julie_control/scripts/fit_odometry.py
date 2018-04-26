@@ -7,6 +7,33 @@ import tf.transformations as tft
 import pdb
 import julie_misc.three_d_plot as jmp
 
+def check_timestamps(enc_vel_stamp, enc_dt):
+    plt.figure()
+    #plt.plot(enc_vel_stamp, enc_dt)
+    plt.hist(enc_dt, bins=100)
+    jmp.decorate(plt.gca(), 'encoder delta timestamp')
+
+def plot_encoders_vel(enc_vel_stamp, enc_vel_lw, enc_vel_rw, enc_vel_avg, enc_stamp, enc_st):
+    # plot encoders velocities
+    plt.figure()
+    ax = plt.subplot(2,1,1)
+    plt.plot(enc_vel_stamp, enc_vel_lw, '.')
+    plt.plot(enc_vel_stamp, enc_vel_rw, '.')
+    plt.plot(enc_vel_stamp, enc_vel_avg, '.')
+    jmp.decorate(ax, 'rotary encoders velocity', ylab='r', legend=['left rear wheel', 'right rear wheel', 'average rear wheels'])
+    ax = plt.subplot(2,1,2)
+    plt.plot(enc_stamp, enc_st, '.')
+    jmp.decorate(ax, 'steering encoder', ylab='r')
+
+def plot_encoders(enc_stamp, enc_lw, enc_rw):
+    # plot encoders position
+    plt.figure()
+    plt.plot(enc_stamp, enc_lw, '.')
+    plt.plot(enc_stamp, enc_rw, '.')
+ 
+
+
+
 def compute_enc_vel(enc_lw, enc_rw, enc_stamp):
     enc_vel_lw = enc_lw[1:] - enc_lw[:-1]
     enc_vel_rw = enc_rw[1:] - enc_rw[:-1]
@@ -89,12 +116,8 @@ def fit(filename, plot=False):
     enc_st_2 = (enc_st[1:] + enc_st[:-1])/2 # let's get the steering at the same time than rotary vel
     odom_rvel = odom_lvel*np.tan(enc_st_2)/ wheel_base
     
-    # plot encoders position
-    plt.figure()
-    plt.plot(enc_stamp, enc_lw, '.')
-    plt.plot(enc_stamp, enc_rw, '.')
-
-    # plot encoders 
+  
+    # plot velocities
     plt.figure()
     ax = plt.subplot(2,1,1)
     plt.plot(truth_stamp, truth_lvel_b[:,0])
@@ -105,22 +128,12 @@ def fit(filename, plot=False):
     plt.plot(enc_vel_stamp, odom_rvel)
     jmp.decorate(ax, 'angular velocity', ylab='r/s', legend=['thuth', 'odometry'])
     
-    plt.figure()
-    ax = plt.subplot(2,1,1)
-    plt.plot(enc_vel_stamp, enc_vel_lw, '.')
-    plt.plot(enc_vel_stamp, enc_vel_rw, '.')
-    plt.plot(enc_vel_stamp, enc_vel_avg, '.')
-    jmp.decorate(ax, 'rotary encoders velocity', ylab='r', legend=['left rear wheel', 'right rear wheel', 'average rear wheels'])
-    ax = plt.subplot(2,1,2)
-    plt.plot(enc_stamp, enc_st, '.')
-    jmp.decorate(ax, 'steering encoder', ylab='r')
-                 
-    plt.figure()
-    #plt.plot(enc_vel_stamp, enc_dt)
-    plt.hist(enc_dt, bins=100)
-    jmp.decorate(plt.gca(), 'encoder delta timestamp')
+    #plot_encoders_vel(enc_vel_stamp, enc_vel_lw, enc_vel_rw, enc_vel_avg, enc_stamp, enc_st)
+    #plot_encoders(enc_stamp, enc_lw, enc_rw)
+    #check_timestamps(enc_vel_stamp, enc_dt)         
+
     plt.show()
     
 if __name__ == '__main__':
     np.set_printoptions(precision=6)
-    fit('/tmp/foo.npz', plot=True)
+    fit('/tmp/odom_data_1.npz', plot=True)
