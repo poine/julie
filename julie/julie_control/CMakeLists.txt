@@ -42,6 +42,7 @@ add_library(julie_ackermann_controller
   src/jac_odometry.cpp
   src/jac_publisher.cpp
   src/jac_raw_odom_publisher.cpp
+  src/jac_ctl_utils.cpp
   )
 target_link_libraries(julie_ackermann_controller
   ${catkin_LIBRARIES}

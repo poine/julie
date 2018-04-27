@@ -2,7 +2,7 @@
 <launch>
   <arg name="world_name" default="worlds/empty.world"/>
   <arg name="robot_model" default="julie_1"/>
-  <arg name="robot_initial_loc" default="-x 0 -y 0 -z 1"/>
+  <arg name="robot_initial_loc" default="-x 0 -y 0 -z 0.3"/>
   <arg name="robot_initial_ori" default="-R 0 -P 0 -Y 0"/>
   
   

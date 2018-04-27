@@ -13,6 +13,7 @@
 #include "julie_control/jac_odometry.h"
 #include "julie_control/jac_publisher.h"
 #include "julie_control/jac_raw_odom_publisher.h"
+#include "julie_control/jac_ctl_utils.h"
 
 namespace julie_controller {
   
@@ -33,6 +34,7 @@ namespace julie_controller {
       JulieOdometry odometry_;
       JACPublisher publisher_;
       JACRawOdomPublisher raw_odom_publisher_;
+      JACVelRef vel_ref_;
       hardware_interface::JointHandle left_steering_joint_;
       hardware_interface::JointHandle right_steering_joint_;
       hardware_interface::JointHandle left_axle_joint_;

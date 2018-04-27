@@ -63,8 +63,10 @@ namespace julie_controller {
     double speed_setpoint = input_manager_.rt_commands_.speed;
     double steering_setpoint = input_manager_.rt_commands_.steering;
 
+    vel_ref_.update(speed_setpoint, dt);
+    
     double _vel_err = odometry_.getLinear() - speed_setpoint;
-    const double Kp = -0.4;
+    const double Kp = -0.6;
     double _eff_cmd = 0.1*speed_setpoint +  Kp*_vel_err;
     left_axle_joint_.setCommand(_eff_cmd);
     right_axle_joint_.setCommand(_eff_cmd);

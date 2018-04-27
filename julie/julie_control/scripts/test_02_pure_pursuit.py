@@ -13,7 +13,7 @@ def list_of_xyzw(q): return [q.x, q.y, q.z, q.w]
 class Node:
     def __init__(self, path_filename):
         param = tdg.pure_pursuit.Param()
-        param.L = 1.65#2
+        param.L = 1.65
         self.ctl = tdg.pure_pursuit.PurePursuit(path_filename, param, look_ahead=5.5)
         self.vel = 3.
         
