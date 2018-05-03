@@ -19,7 +19,7 @@ LOG = logging.getLogger('odometry_fit_steering_sensor_tflearn')
 class AnnSteeringSensor:
     def __init__(self):
         inputs = tflearn.input_data(shape=[None, 1], dtype=tf.float32)
-        self.layer1 = tflearn.fully_connected(inputs, 29, activation='relu', regularizer='L2', weight_decay=0.001)
+        self.layer1 = tflearn.fully_connected(inputs, 29, activation='relu', regularizer='L2', weight_decay=0.001, name='layer1')
         out = tflearn.fully_connected(self.layer1, 1, activation='linear', regularizer='L2', weight_decay=0.001)
         reg = tflearn.regression(out, optimizer='sgd', loss='mean_square', learning_rate=0.001, metric=None)
         self.model = tflearn.DNN(reg,
@@ -30,6 +30,7 @@ class AnnSteeringSensor:
     def train(self, _inputs, _outputs, epochs):
         self.model.fit(_inputs, _outputs, n_epoch=epochs,
                        batch_size=64, show_metric=True, validation_set=0.1)
+        
 
     def save(self, filename):
         self.model.save(filename)
@@ -48,7 +49,11 @@ def main(train, test, lim=math.pi/6, epochs=100):
         steering_angles = np.random.uniform(low=-lim, high=lim, size=(nb_samples,1))
         steering_sensors =  ofss.BrokenDataSet.steering_sensor(steering_angles)
         ss.train(steering_sensors, steering_angles, epochs)
-        pdb.set_trace()
+        layer1_vars = tflearn.variables.get_layer_variables_by_name('layer1')
+        print ss.model.get_weights(layer1_vars[0]) # W
+        print ss.model.get_weights(layer1_vars[0]) # b
+        ss.model.set_weights(layer1_vars[1], np.zeros(29))
+        #pdb.set_trace()
         ss.save(filename)
     else:
         ss.load(filename)
