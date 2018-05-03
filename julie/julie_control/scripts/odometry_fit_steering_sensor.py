@@ -55,6 +55,8 @@ def sklearn_find_steering_sensor(lim=math.pi/6, nb_samples=int(1e5), epochs=100)
     tr_input , tr_output = steering_sensors, steering_angles
     ann.fit(tr_input , tr_output)
 
+    pdb.set_trace()
+    
     steering_angles = np.linspace(-lim, lim, 1000)
     steering_sensors = BrokenDataSet.steering_sensor(steering_angles)
     predicted_angles = ann.predict(steering_sensors.reshape(-1, 1))
@@ -65,15 +67,12 @@ def sklearn_find_steering_sensor(lim=math.pi/6, nb_samples=int(1e5), epochs=100)
 def tflearn__find_steering_sensor(lim=math.pi/6, nb_samples=int(1e5), epochs=100):
     inputs = tflearn.input_data(shape=[None, 1], dtype=tf.float32)
 
-    #_w_init = tflearn.initializations.uniform(dtype=tf.float64)
-    #_b_init = tflearn.initializations.uniform(dtype=tf.float64)
     net = tflearn.fully_connected(inputs, 29, activation='relu', regularizer='L2')#, weights_init=_w_init, bias_init=_b_init)
     #net = tflearn.layers.normalization.batch_normalization(net)
     #net = tflearn.activations.relu(net)
     out = tflearn.fully_connected(net, 1, activation='linear')
 
     net = tflearn.regression(out, optimizer='sgd', loss='mean_square', learning_rate=0.001, metric=None)
-    #net = tflearn.regression(out, optimizer='adam', loss='mean_square', learning_rate=0.001, metric=None)#, dtype=tf.float64)
     model = tflearn.DNN(net,
                         tensorboard_dir='/tmp/odom_tflearn_logs/',
                         best_checkpoint_path='/tmp/odom_best',
@@ -90,7 +89,7 @@ def tflearn__find_steering_sensor(lim=math.pi/6, nb_samples=int(1e5), epochs=100
     plot_test_steering_sensor(steering_sensors, steering_angles, predicted_angles, 'sklearn {}'.format(epochs))
 
 # float64 problem, but that does not seem to be the issue
-# had fixed by hacking tflear/layers/core.py and forcing float64... wtf!!!
+# had fixed it by hacking tflear/layers/core.py and forcing float64... wtf!!!
 def tflearn__find_steering_sensor2(lim=math.pi/6, nb_samples=int(1e5), epochs=100):
     inputs = tflearn.input_data(shape=[None, 1], dtype=tf.float64)
     true_output = tf.placeholder(shape=(None, 1), dtype=tf.float64)
@@ -110,7 +109,11 @@ def tflearn__find_steering_sensor2(lim=math.pi/6, nb_samples=int(1e5), epochs=10
     training_input , training_output = steering_sensors, steering_angles
     model.fit(training_input, training_output, n_epoch=epochs, batch_size=64, show_metric=True, validation_set=0.1)
 
- 
+
+def tf__find_steering_sensor():
+    pass
+
+    
 
     
 def plot_test_steering_sensor(sensors, angles, predicted_angles, txt):
@@ -134,7 +137,7 @@ def plot_test_steering_sensor(sensors, angles, predicted_angles, txt):
 if __name__ == '__main__':
     np.set_printoptions(precision=6)
     #plot_steering_sensor()
-    sklearn_find_steering_sensor(epochs=8000)
+    sklearn_find_steering_sensor(epochs=200)
     #tflearn__find_steering_sensor(epochs=100)
     #tflearn__find_steering_sensor2(epochs=100)
     #ds = BrokenDataSet('/tmp/odom_data_1.npz')
