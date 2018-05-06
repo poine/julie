@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!--
+  Move base with dumb global planer and TEB as local planner
+-->
+<launch>
+  <arg name="scan_topic" default="/base_scan"/>
+  <arg name="static_plan" default="$(find julie_guidance)/static_plans/oval.path"/>
+
+  <param name="DumbGlobalPlanner/static_plan_path" value="$(arg static_plan)"/>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+
+    <rosparam file="$(find julie_guidance)/cfg/teb/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find julie_guidance)/cfg/teb/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find julie_guidance)/cfg/teb/teb_local_planner_params.yaml" command="load" />
+
+    <param name="base_global_planner" value="julie_guidance/DumbGlobalPlanner" />
+    <param name="planner_frequency" value="0.0" />
+    <param name="planner_patience" value="5.0" />
+
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    <param name="controller_frequency" value="5.0" />
+    <param name="controller_patience" value="15.0" />
+
+    <param name="clearing_rotation_allowed" value="false" /> <!-- Our carlike robot is not able to rotate in place -->
+
+    <!--<remap from="/odom" to="/rbcar_robot_control/odom"/>-->
+    <remap from="/scan" to="$(arg scan_topic)"/>
+  </node>
+
+
+</launch>

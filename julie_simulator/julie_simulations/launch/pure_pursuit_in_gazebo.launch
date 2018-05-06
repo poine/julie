@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!--
+
+-->
+
+<launch>
+
+  <!--  ************** Gazebo Simulation ***************  -->
+  <include file="$(find julie_gazebo_bringup)/launch/julie_enac_south_east.launch">
+    <arg name="robot_model" value="julie_2" />
+  </include>
+
+  <!--  ************** Pure Pursuit ***************  -->
+  <node pkg="julie_guidance" type="pure_pursuit_node.py" name="pure_pursuit">
+    <param name="path_filename" value="$(find julie_worlds)/paths/enac_outdoor_south_east/path_J_1.npz"/>
+  </node>
+
+  <include file="$(find julie_worlds)/launch/publish_map.launch"/>
+
+  <include file="$(find julie_viz)/launch/view_navigation.launch"/>
+
+  
+</launch>

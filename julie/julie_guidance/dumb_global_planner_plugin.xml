@@ -1,0 +1,7 @@
+<library path="lib/libdumb_global_planner_lib">
+  <class name="julie_guidance/DumbGlobalPlanner" type="global_planner::DumbGlobalPlanner" base_class_type="nav_core::BaseGlobalPlanner">
+    <description>
+      This is a dumb global planner plugin for Julie.
+    </description>
+  </class>
+</library>
