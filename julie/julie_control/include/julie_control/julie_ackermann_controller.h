@@ -35,6 +35,7 @@ namespace julie_controller {
       JACPublisher publisher_;
       JACRawOdomPublisher raw_odom_publisher_;
       JACVelRef vel_ref_;
+      JACDebugPublisher debug_pub_;
       hardware_interface::JointHandle left_steering_joint_;
       hardware_interface::JointHandle right_steering_joint_;
       hardware_interface::JointHandle left_axle_joint_;

@@ -63,7 +63,7 @@ class Node:
                     _unused, self.alpha = self.ctl.compute(l, y)
                 else:
                     self.publish_ackermann()
-            #self.publish_path(self.ctl.path) # expensive...
+            self.publish_path(self.ctl.path) # expensive...
             self.rate.sleep()
 
         
@@ -75,9 +75,12 @@ def make_oval(filename='/tmp/foo'):
 
 def main(args):
     #make_oval()
-    rospy.init_node('julie_control__test_02_pure_pursuit')
-    jwd = rospkg.RosPack().get_path('julie_worlds')
-    path_filename = os.path.join(jwd, 'paths/enac_outdoor_south_east/path_J_1.npz')
+    rospy.init_node('julie_control__pure_pursuit_node')
+    path_filename = rospy.get_param('~path_filename')
+    print('###### using path {}'.format(path_filename))
+    
+    #jwd = rospkg.RosPack().get_path('julie_worlds')
+    #path_filename = os.path.join(jwd, 'paths/enac_outdoor_south_east/path_J_1.npz')
     Node(path_filename).run()
   
 

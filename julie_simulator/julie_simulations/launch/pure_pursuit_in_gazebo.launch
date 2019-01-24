@@ -1,23 +1,42 @@
 <?xml version="1.0"?>
 
 <!--
-
+<arg name="publish_robot_state" default="true"/>
 -->
-
 <launch>
-
+  <arg name="world_name" default="$(find julie_gazebo)/worlds/enac_south_east.world"/>
+  <arg name="path_name" default="enac_outdoor_south_east/path_J_1.npz" />
+  <arg name="gui" default="true"/>
+  
   <!--  ************** Gazebo Simulation ***************  -->
-  <include file="$(find julie_gazebo_bringup)/launch/julie_enac_south_east.launch">
+  <!--
+      <include file="$(find julie_gazebo_bringup)/launch/julie_enac_south_east.launch">
+      <arg name="robot_model" value="julie_2" />
+      </include>
+  -->
+  <include file="$(find julie_gazebo_bringup)/launch/julie_empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)" />
     <arg name="robot_model" value="julie_2" />
+    <arg name="robot_initial_loc" value="-x 0 -y 37 -z 1"/>
+    <arg name="robot_initial_ori" value="-R 0 -P 0 -Y 3.1"/>
+    <arg name="gui" value="$(arg gui)"/>
   </include>
 
   <!--  ************** Pure Pursuit ***************  -->
   <node pkg="julie_guidance" type="pure_pursuit_node.py" name="pure_pursuit">
-    <param name="path_filename" value="$(find julie_worlds)/paths/enac_outdoor_south_east/path_J_1.npz"/>
+    <param name="path_filename" value="$(find julie_worlds)/paths/$(arg path_name)"/>
   </node>
 
+  <!-- publish odom_to_map
   <include file="$(find julie_worlds)/launch/publish_map.launch"/>
+  rosrun homere_control reset_odometry.py _ref_frame:=map _robot_truth_topic:=/julie_gazebo/base_link_uth
+  -->
+  <node pkg="homere_control" type="reset_odometry.py" name='reset_odometry'>
+    <param name="ref_frame" value="map"/>
+    <param name="robot_truth_topic" value="/julie_gazebo/base_link_truth"/>
+  </node>
 
+  
   <include file="$(find julie_viz)/launch/view_navigation.launch"/>
 
   

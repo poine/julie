@@ -31,6 +31,7 @@ namespace julie_controller {
     odometry_.init(wheel_base, velocity_rolling_window_size);
     input_manager_.init( hw, controller_nh);
     publisher_.init(root_nh, controller_nh);
+    debug_pub_.init(root_nh, controller_nh);
     raw_odom_publisher_.init(root_nh, controller_nh);
     return true;
   }
@@ -44,6 +45,7 @@ namespace julie_controller {
     odometry_.starting(now);
     //input_manager_.starting(now);
     publisher_.starting(now);
+    debug_pub_.starting(now);
   }
   
   /*******************************************************************************
@@ -64,10 +66,13 @@ namespace julie_controller {
     double steering_setpoint = input_manager_.rt_commands_.steering;
 
     vel_ref_.update(speed_setpoint, dt);
-    
-    double _vel_err = odometry_.getLinear() - speed_setpoint;
-    const double Kp = -0.6;
-    double _eff_cmd = 0.1*speed_setpoint +  Kp*_vel_err;
+
+    double _vel_meas = odometry_.getLinear(); 
+    double _vel_err =  _vel_meas - vel_ref_.v_;//speed_setpoint;
+    const double Kp = -12.5;
+    const double kh1 = 0.1;
+    const double kh2 = 12.5;
+    double _eff_cmd = kh1*vel_ref_.v_ +  kh2*vel_ref_.a_ + Kp*_vel_err;
     left_axle_joint_.setCommand(_eff_cmd);
     right_axle_joint_.setCommand(_eff_cmd);
 
@@ -75,6 +80,7 @@ namespace julie_controller {
     right_steering_joint_.setCommand(steering_setpoint);
     
     publisher_.publish(odometry_.getHeading(), odometry_.getX(), odometry_.getY(), odometry_.getLinear(), odometry_.getAngular(), now);
+    debug_pub_.publish(speed_setpoint, vel_ref_.v_, _vel_meas, now);
     raw_odom_publisher_.publish(left_wheel_angle, right_wheel_angle, steering_angle, now);
     
   }

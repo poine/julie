@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS  roscpp
 add_message_files(
   FILES
   RawOdom.msg
+  JAC_Debug.msg
 )
 
 generate_messages(

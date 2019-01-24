@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-import os, logging, math, numpy as np
+import sys, os, logging, math, numpy as np
 import rospy, rospkg, sensor_msgs.msg, nav_msgs.msg, julie_control.msg
 import julie_misc.utils as jmu
 
@@ -52,7 +52,8 @@ if __name__ == '__main__':
         node.run()
     except rospy.ROSInterruptException:
         print('recorded {} odometry and {} thruth'.format( len(node.odom_stamp), len(node.truth_stamp)))
-    output_filename = '/tmp/foo'
+    output_filename = rospy.get_param('~output_filename')
+    #'/tmp/foo' if len(sys.argv) < 2 else sys.argv[2]
     print('saving to {}'.format(output_filename))
     np.savez(output_filename,
              encoders_lw = np.array(node.left_wheel_angle),

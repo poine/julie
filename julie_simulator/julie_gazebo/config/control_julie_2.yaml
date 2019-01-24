@@ -8,7 +8,8 @@ julie:
     type: julie_control/JulieAckermannController
     pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
     twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
-
+    publish_odom_tf: true
+    
 gazebo_ros_control:
   pid_gains:
 #    left_steering_joint: {p: 100.0, i: 0.01, d: 10.0}

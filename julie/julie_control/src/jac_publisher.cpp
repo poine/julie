@@ -15,6 +15,8 @@ namespace julie_controller {
   }
 
   void JACPublisher::init(ros::NodeHandle& root_nh, ros::NodeHandle& controller_nh) {
+    controller_nh.getParam("publish_odom_tf", enable_odom_tf_);
+
     // Get and check params for covariances
     XmlRpc::XmlRpcValue pose_cov_list;
     controller_nh.getParam("pose_covariance_diagonal", pose_cov_list);

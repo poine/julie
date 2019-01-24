@@ -8,7 +8,7 @@
       <plugin name="ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>/julie</robotNamespace>
         <robotParam>robot_description</robotParam>
-        <controlPeriod>0.001</controlPeriod>
+        <controlPeriod>0.01</controlPeriod>
         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> 
         <!--<controlPeriod>0.01</controlPeriod>-->
 	<!--<robotSimType>julie_hardware_gazebo/JulieHardwareInterface</robotSimType>-->
@@ -37,7 +37,7 @@
 	<frameName>map</frameName>
 	<bodyName>base_link</bodyName>
 	<topicName>julie_gazebo/base_link_truth</topicName>
-	<updateRate>30.0</updateRate>
+	<updateRate>100.0</updateRate>
       </plugin>
 
     </gazebo>

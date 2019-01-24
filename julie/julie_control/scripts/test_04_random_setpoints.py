@@ -45,7 +45,7 @@ class Node:
                 if x < -self.xlim:
                     self.vel = self.vlim
                     self.phase = 0 
-            print('{} {}: {}'.format(x, v, self.vel))
+            #print('{} {}: {}'.format(x, v, self.vel))
             
             
     def run(self):
