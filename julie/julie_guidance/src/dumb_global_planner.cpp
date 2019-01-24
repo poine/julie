@@ -1,4 +1,5 @@
 #include <fstream>
+#include <tf/tf.h>
 #include <pluginlib/class_list_macros.h>
 #include "julie_guidance/dumb_global_planner.h"
 
