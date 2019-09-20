@@ -48,6 +48,8 @@ add_library(julie_ackermann_controller
 target_link_libraries(julie_ackermann_controller
   ${catkin_LIBRARIES}
   )
+add_dependencies(julie_ackermann_controller ${catkin_EXPORTED_TARGETS})
+
 add_executable(julie_hardware_interface_node
   src/julie_hardware_interface.cpp
 )
