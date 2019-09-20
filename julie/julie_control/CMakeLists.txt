@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS  roscpp
                                          controller_interface
                                          controller_manager
 					 std_msgs
+					 ackermann_msgs
 					 message_generation)
 add_message_files(
   FILES
